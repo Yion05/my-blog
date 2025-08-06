@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khoo Jun Yong - Personal Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            /* Custom star cursor */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="gold" stroke="white" stroke-width="0.5"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>') 12 12, auto;
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .content-page {
+            display: none;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom styles for navigation links */
+        .nav-link.active {
+            color: #3b82f6; /* blue-500 */
+            border-bottom: 2px solid #3b82f6;
+            text-shadow: 0 0 5px rgba(59, 130, 246, 0.7);
+        }
+        /* Animation for the title glow effect on the landing page*/
+        @keyframes text-glow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(59, 130, 246, 0.3), 1px 1px 2px rgba(0,0,0,0.9);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.4), 0 0 40px rgba(59, 130, 246, 0.5), 1px 1px 2px rgba(0,0,0,0.9);
+            }
+        }
+        .title-glow {
+            animation: text-glow 5s ease-in-out infinite;
+        }
+        /* New animation for the subtitle on the landing page*/
+        @keyframes subtitle-glow {
+            0%, 100% {
+                color: #d1d5db; /* Tailwind gray-300 */
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+            }
+            50% {
+                color: #FBBF24; /* Tailwind amber-400 */
+                text-shadow: 0 0 8px rgba(251, 191, 36, 0.6), 1px 1px 3px rgba(0,0,0,0.9);
+            }
+        }
+        .subtitle-effect {
+            animation: subtitle-glow 4s ease-in-out infinite;
+        }
+        /* New class for the main page titles */
+        .main-title-effect {
+            text-shadow: 2px 2px 4px #000000, 0 0 5px #000000, 0 0 10px #000000;
+            border-bottom: 2px solid #4f46e5; /* indigo-600 for a deeper blue */
+        }
+        /* Custom styles for the main content's `h3` tags */
+        .main-content h3 {
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+        /* New styles for all buttons */
+        .animated-button {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #1d4ed8, #3b82f6); /* Indigo-700 to Blue-500 */
+            border: none;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .animated-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .animated-button:active {
+            transform: translateY(0);
+        }
+        /* Shine effect on hover */
+        .animated-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+        .animated-button:hover:before {
+            left: 100%;
+        }
+        /* Pulse effect for the landing page button */
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.33);
+            }
+            80%, 100% {
+                opacity: 0;
+            }
+        }
+        .landing-button-pulse:before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 100%;
+            height: 100%;
+            background-color: #3b82f6; /* blue-500 */
+            border-radius: 9999px;
+            animation: pulse-ring 1.5s infinite;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Landing Page -->
+    <div id="landing-page" class="h-screen flex flex-col items-center justify-center text-center p-4 relative z-10">
+        <h1 class="text-5xl md:text-7xl font-black uppercase tracking-wider mb-4 title-glow">Khoo Jun Yong</h1>
+        <p class="text-lg md:text-xl text-gray-300 mb-8 subtitle-effect">Welcome to my personal space on the web.</p>
+        <button id="start-btn" class="animated-button landing-button-pulse text-white font-bold py-3 px-8 rounded-full text-lg focus:outline-none">
+            Start Exploring
+        </button>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div id="main-content" class="hidden min-h-screen relative z-10">
+        <!-- Header & Navigation -->
+        <header class="bg-gray-900 bg-opacity-80 backdrop-blur-md sticky top-0 z-50 shadow-lg">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-white" onclick="showLandingPage()">Khoo Jun Yong</a>
+                <div class="space-x-4 md:space-x-8 text-lg">
+                    <!-- Updated navigation links -->
+                    <a href="#about-me" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('about-me', this)">About Me</a>
+                    <a href="#journey" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('journey', this)">My Journey</a>
+                    <a href="#hobbies" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('hobbies', this)">Hobbies</a>
+                    <a href="#portfolio" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('portfolio', this)">Portfolio</a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Page Content -->
+        <main class="container mx-auto p-6 md:p-12">
+            <!-- About Me Page -->
+            <div id="about-me" class="content-page">
+                <h2 class="text-4xl font-bold mb-8 pb-2 main-title-effect">About Me</h2>
+                
+                <!-- Profile Section -->
+                <div class="flex flex-col md:flex-row items-center gap-8 bg-gray-800 p-8 rounded-lg shadow-xl mb-12">
+                    <img src="https://junyong.vercel.app/me2.jpg" alt="Khoo Jun Yong's photo" class="h-48 w-32 object-cover rounded-lg flex-shrink-0 transition-transform duration-300 hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/128x192/4B5563/FFFFFF?text=Photo';">
+                    <div class="mt-4 md:mt-0 flex-1 text-center md:text-left">
+                        <h3 class="text-3xl font-bold text-blue-400">Khoo Jun Yong</h3>
+                        <p class="text-lg text-gray-400 mb-4">Instagram: <a href="https://www.instagram.com/jyong_05/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">@jyong_05</a></p>
+                        <p class="text-gray-300 leading-relaxed">I am a teenager who aspires to be an entrepreneur. I became an introvert after starting university and now I'm scared of doing presentations, but I will solve this problem one day. I must solve this problem. I will study hard for my exams to be able to work in my target company.</p>
+                    </div>
+                </div>
+
+                <!-- Personal Details Section -->
+                <div class="mt-12">
+                    <h3 class="text-3xl font-bold text-blue-400 mb-6">Details</h3>
+                    <div class="space-y-6 bg-gray-800 p-6 rounded-lg shadow-xl">
+                        <div class="flex items-center gap-4">
+                            <!-- School icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.562 1.342c.38.747.653 1.559.814 2.408M12 14l9 5-9 5-9-5 9-5zm0 0l-3.342 1.856a12.083 12.083 0 01-.562-1.342c-.38-.747-.653-1.559-.814-2.408M12 14L5.84 10.578a12.083 12.083 0 01.562-1.342c.38-.747.653-1.559.814-2.408m0 0l9 5 9-5-9-5-9 5z" />
+                            </svg>
+                            <p class="text-xl text-gray-300">Multimedia University</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <!-- Location icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <p class="text-xl text-gray-300">Lives in Malaysia</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <!-- Male icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 2.761-2.239 5-5 5s-5-2.239-5-5 2.239-5 5-5 5 2.239 5 5z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13.5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.5 17.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                            </svg>
+                            <p class="text-xl text-gray-300">Male</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Posts Section -->
+                <div class="mt-12">
+                    <h3 class="text-3xl font-bold text-blue-400 mb-6">My Posts</h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Placeholder Post 1 -->
+                        <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+                            <img src="https://placehold.co/600x300/1f2937/ffffff?text=Post+Title+1" alt="Placeholder Post 1" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h4 class="text-2xl font-bold text-blue-400 mb-2">My First Programming Language</h4>
+                                <p class="text-gray-400 text-sm mb-4">October 26, 2024</p>
+                                <p class="text-gray-300">A look back at the first programming language I learned and how it shaped my career path.</p>
+                                <a href="#" class="inline-block mt-4 text-blue-400 hover:underline">Read more...</a>
+                            </div>
+                        </div>
+                        <!-- Placeholder Post 2 REMOVED -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Journey Page -->
+            <div id="journey" class="content-page">
+                <h2 class="text-4xl font-bold mb-8 pb-2 main-title-effect">My Journey</h2>
+                <div class="space-y-12">
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                         <img src="https://junyong.vercel.app/uni.png" alt="Academy picture" class="w-full h-64 object-cover rounded-lg mb-6" onerror="this.onerror=null;this.src='https://placehold.co/800x400/1f2937/ffffff?text=University';">
+                        <h3 class="text-2xl font-bold text-blue-400 mb-2">My University</h3>
+                        <p class="text-gray-300 leading-relaxed">My journey into the world of technology started at my academy. After passing my middle and secondary school exams, I enrolled at MMU Melaka University.</p>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                        <h3 class="text-2xl font-bold text-blue-400 mb-2">Education & Growth</h3>
+                        <p class="text-gray-300 leading-relaxed">I later enrolled in a comprehensive Computer Science with Artificial Intelligence program, where I delved deeper into software engineering principles, database management, and advanced web technologies. I chose this course because I am fascinated by new technologies and want to learn more about the field of AI.</p>
+                    </div>
+                     <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                        <h3 class="text-2xl font-bold text-blue-400 mb-2">Future Aspirations</h3>
+                        <p class="text-gray-300 leading-relaxed">I'm always exploring new technologies and building my skills. My goal is to work on exciting projects that push the boundaries of what's possible with code. I'm passionate about problem-solving and am eager to contribute to innovative web applications and learn from real-world challenges.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hobbies Page -->
+            <div id="hobbies" class="content-page">
+                <h2 class="text-4xl font-bold mb-8 pb-2 main-title-effect">My Hobbies</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+                        <img src="https://junyong.vercel.app/pp.jpg" alt="Ping Pong" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/1f2937/ffffff?text=Ping+Pong';">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-blue-400 mb-2">Ping Pong</h3>
+                            <p class="text-gray-300">I really enjoy playing ping pong, and I play twice a week at the MMU mini sports hall.</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+                        <img src="https://junyong.vercel.app/m.jpg" alt="Collecting" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/1f2937/ffffff?text=Collecting';">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-blue-400 mb-2">Collecting</h3>
+                            <p class="text-gray-300">I have a passion for collecting items with history and nostalgia, such as old money, Pokémon cards, and other unique memorabilia.</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+                        <img src="https://junyong.vercel.app/me.jpg" alt="Traveling" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/1f2937/ffffff?text=Traveling';">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-blue-400 mb-2">Traveling</h3>
+                            <p class="text-gray-300">Exploring new cultures, cuisines, and landscapes broadens my perspective and fuels my creativity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio Page -->
+            <div id="portfolio" class="content-page">
+                <h2 class="text-4xl font-bold mb-8 pb-2 main-title-effect">Portfolio & Cooperation</h2>
+                <div class="space-y-12">
+                    <div class="bg-gray-800 p-8 rounded-lg shadow-xl">
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="bg-gray-700 p-4 rounded-lg flex-shrink-0">
+                                 <img src="https://yion.vercel.app/logo2.png" alt="Yion Logo" class="h-20 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/200x80/374151/ffffff?text=Yion';">
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-blue-400">Yion Workshop</h3>
+                                <p class="text-lg text-gray-400 mb-4">Personal Project</p>
+                                <p class="text-gray-300 leading-relaxed">Yion is a personal workshop project I developed to explore new web technologies and showcase my skills. It's a platform where I experiment with front-end frameworks and build creative components. This project represents my passion for continuous learning and my dedication to mastering the craft of web development.</p>
+                                <a href="https://yion.vercel.app" target="_blank" rel="noopener noreferrer" class="animated-button inline-block mt-4 text-white font-bold py-2 px-6 rounded-lg">
+                                    Visit Workshop
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 p-8 rounded-lg shadow-xl">
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="bg-white p-4 rounded-lg flex-shrink-0">
+                                 <img src="https://healthxaxis.com/wp-content/uploads/2023/05/HXA-Logo-06.png" alt="HealthX Axis Logo" class="h-20 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/200x80/ffffff/1f2937?text=HealthX+Axis';">
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-blue-400">HealthX Axis</h3>
+                                <p class="text-lg text-gray-400 mb-4">Website Development Project</p>
+                                <p class="text-gray-300 leading-relaxed">I had the privilege of collaborating with HealthX Axis, a forward-thinking company in the healthcare technology sector. My role was to lead the development of their new corporate website. The project involved creating a modern, responsive, and user-friendly platform to showcase their services, share insights, and connect with their audience.</p>
+                                <a href="https://healthxaxis.com/" target="_blank" rel="noopener noreferrer" class="animated-button inline-block mt-4 text-white font-bold py-2 px-6 rounded-lg">
+                                    Visit Website
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 bg-opacity-50 mt-12">
+            <div class="container mx-auto px-6 py-4 text-center text-gray-400">
+                <p>&copy; 2024 Khoo Jun Yong. All Rights Reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- THREE.JS SCENE SETUP ---
+        // Declare variables for the scene, camera, renderer, stars, and the new moon
+        let scene, camera, renderer, stars, moon;
+
+        function init3D() {
+            // --- Scene and Camera ---
+            scene = new THREE.Scene();
+            // Set up the camera. We're pulling it back on the Z-axis to see the moon.
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 30;
+
+            // --- Renderer ---
+            // The renderer draws the scene onto the canvas
+            renderer = new THREE.WebGLRenderer({
+                canvas: document.querySelector('#bg-canvas'),
+                alpha: true // Allows for a transparent background
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // --- Starfield ---
+            // Create a geometry for the stars
+            const starGeo = new THREE.BufferGeometry();
+            const starCount = 6000;
+            const positions = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount * 3; i++) {
+                // Assign random positions to each star
+                positions[i] = (Math.random() - 0.5) * 600;
+            }
+            starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            // Create the material for the stars
+            let starMaterial = new THREE.PointsMaterial({
+                color: 0xaaaaaa,
+                size: 0.7,
+                transparent: true
+            });
+
+            stars = new THREE.Points(starGeo, starMaterial);
+            scene.add(stars);
+
+            // --- Moon ---
+            // Use a texture loader to load images for the moon's surface
+            const textureLoader = new THREE.TextureLoader();
+            const moonTexture = textureLoader.load('https://s3-us-west-2.amazonaws.com/s.cdpn.io/17271/lroc_color_poles_1k.jpg');
+            const displacementTexture = textureLoader.load('https://s3-us-west-2.amazonaws.com/s.cdpn.io/17271/ldem_3_8bit.jpg');
+
+            // Create the moon's geometry (a sphere)
+            const moonGeometry = new THREE.SphereGeometry(8, 64, 64);
+            // Create the moon's material, which determines its appearance
+            const moonMaterial = new THREE.MeshPhongMaterial({
+                map: moonTexture, // The main color texture
+                displacementMap: displacementTexture, // Creates the bumps and craters
+                displacementScale: 0.1, // How pronounced the craters are
+                color: 0xffffff,
+                shininess: 5 // How much it shines
+            });
+            moon = new THREE.Mesh(moonGeometry, moonMaterial);
+            scene.add(moon);
+
+            // --- Lighting ---
+            // Add an ambient light to softly illuminate the whole scene
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+            scene.add(ambientLight);
+
+            // Add a point light to cast light on the moon, creating highlights and shadows
+            const pointLight = new THREE.PointLight(0xffffff, 1.5);
+            pointLight.position.set(20, 10, 40);
+            scene.add(pointLight);
+
+            // --- Event Listeners ---
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onMouseMove, false);
+            
+            // Start the animation loop
+            animate();
+        }
+
+        // --- Handle Window Resizing ---
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // --- Handle Mouse Movement for Parallax Effect ---
+        function onMouseMove(event) {
+            // Calculate mouse position relative to the center of the screen
+            const mouseX = (event.clientX - window.innerWidth / 2) / 100;
+            const mouseY = (event.clientY - window.innerHeight / 2) / 100;
+            
+            // Move the camera slightly based on mouse position
+            // This creates a subtle parallax effect
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            
+            // Make the camera always look at the center of the scene
+            camera.lookAt(scene.position);
+        }
+
+        // --- Animation Loop ---
+        function animate() {
+            // Rotate the stars and moon in each frame
+            stars.rotation.y -= 0.0001;
+            moon.rotation.y += 0.0005;
+            moon.rotation.x += 0.0001;
+
+            // Render the scene from the camera's perspective
+            renderer.render(scene, camera);
+            
+            // Request the next frame to create a smooth animation
+            requestAnimationFrame(animate);
+        }
+
+        // --- Page Navigation Logic ---
+        const startBtn = document.getElementById('start-btn');
+        const landingPage = document.getElementById('landing-page');
+        const mainContent = document.getElementById('main-content');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.content-page');
+
+        function showPage(pageId, clickedLink) {
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.style.display = 'block';
+            }
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            if (clickedLink) {
+                clickedLink.classList.add('active');
+            }
+        }
+        
+        function showLandingPage() {
+            mainContent.style.display = 'none';
+            landingPage.style.display = 'flex';
+        }
+
+        startBtn.addEventListener('click', () => {
+            landingPage.style.display = 'none';
+            mainContent.style.display = 'block';
+            showPage('about-me', document.querySelector('a[href="#about-me"]'));
+        });
+
+        // Initialize the 3D scene when the script loads
+        init3D();
+    </script>
+</body>
+</html>
