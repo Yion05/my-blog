@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -35,6 +37,12 @@
             color: #3b82f6; /* blue-500 */
             border-bottom: 2px solid #3b82f6;
             text-shadow: 0 0 5px rgba(59, 130, 246, 0.7);
+        }
+        /* Style for mobile active link */
+        #mobile-menu .nav-link.active {
+            color: #3b82f6;
+            border-bottom: none; /* remove bottom border for mobile */
+            background-color: #4b5563; /* gray-600 */
         }
         /* Animation for the title glow effect on the landing page*/
         @keyframes text-glow {
@@ -124,6 +132,41 @@
             z-index: -1;
             transform: translate(-50%, -50%);
         }
+
+        /* Mobile specific styles for enhanced aesthetics */
+        @media (max-width: 767px) {
+            .title-glow {
+                font-size: 3.5rem; /* Adjust font size for smaller screens */
+            }
+            .subtitle-effect {
+                font-size: 1rem; /* Adjust font size for smaller screens */
+            }
+            .main-title-effect {
+                font-size: 2.5rem; /* Adjust main page title size */
+                margin-bottom: 1.5rem; /* Adjust spacing */
+            }
+            .content-page {
+                padding-left: 1rem;
+                padding-right: 1rem; /* Add horizontal padding for mobile content */
+            }
+            .flex-col.md\:flex-row {
+                flex-direction: column;
+            }
+            .md\:text-left {
+                text-align: center; /* Center text on mobile for profile section */
+            }
+            .h-48.w-32 {
+                height: 12rem; /* Keep image size consistent */
+                width: 8rem;
+                margin-bottom: 1rem; /* Add some space below the image */
+            }
+            .grid.md\:grid-cols-2 {
+                grid-template-columns: 1fr; /* Stack hobby cards vertically on mobile */
+            }
+            .main-content h3 {
+                font-size: 1.75rem; /* Adjust h3 font size for mobile */
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -144,16 +187,36 @@
     <div id="main-content" class="hidden min-h-screen relative z-10">
         <!-- Header & Navigation -->
         <header class="bg-gray-900 bg-opacity-80 backdrop-blur-md sticky top-0 z-50 shadow-lg">
-            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-                <a href="#" class="text-2xl font-bold text-white" onclick="showLandingPage()">Khoo Jun Yong</a>
-                <div class="space-x-4 md:space-x-8 text-lg">
-                    <!-- Updated navigation links -->
-                    <a href="#about-me" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('about-me', this)">About Me</a>
-                    <a href="#journey" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('journey', this)">My Journey</a>
-                    <a href="#hobbies" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('hobbies', this)">Hobbies</a>
-                    <a href="#portfolio" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('portfolio', this)">Portfolio</a>
+            <div class="container mx-auto px-6">
+                <div class="flex justify-between items-center py-4">
+                    <!-- Logo -->
+                    <a href="#" class="text-2xl font-bold text-white" onclick="showLandingPage()">Khoo Jun Yong</a>
+
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden">
+                        <button id="menu-btn" class="text-white focus:outline-none">
+                            <!-- Changed to a more common and reliable icon for mobile menu, e.g., bars or equal icon -->
+                            <i class="fas fa-bars text-3xl"></i> 
+                        </button>
+                    </div>
+
+                    <!-- Primary Nav -->
+                    <nav class="hidden md:flex space-x-8 text-lg">
+                        <a href="#about-me" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('about-me', this)">About Me</a>
+                        <a href="#journey" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('journey', this)">My Journey</a>
+                        <a href="#hobbies" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('hobbies', this)">Hobbies</a>
+                        <a href="#portfolio" class="nav-link text-gray-300 hover:text-blue-400 transition" onclick="showPage('portfolio', this)">Portfolio</a>
+                    </nav>
                 </div>
-            </nav>
+
+                <!-- Mobile menu -->
+                <div id="mobile-menu" class="hidden md:hidden pb-4">
+                    <a href="#about-me" class="nav-link block py-2 px-2 text-gray-300 hover:bg-gray-700 rounded" onclick="showPage('about-me', this)">About Me</a>
+                    <a href="#journey" class="nav-link block py-2 px-2 text-gray-300 hover:bg-gray-700 rounded" onclick="showPage('journey', this)">My Journey</a>
+                    <a href="#hobbies" class="nav-link block py-2 px-2 text-gray-300 hover:bg-gray-700 rounded" onclick="showPage('hobbies', this)">Hobbies</a>
+                    <a href="#portfolio" class="nav-link block py-2 px-2 text-gray-300 hover:bg-gray-700 rounded" onclick="showPage('portfolio', this)">Portfolio</a>
+                </div>
+            </div>
         </header>
 
         <!-- Page Content -->
@@ -168,7 +231,7 @@
                     <div class="mt-4 md:mt-0 flex-1 text-center md:text-left">
                         <h3 class="text-3xl font-bold text-blue-400">Khoo Jun Yong</h3>
                         <p class="text-lg text-gray-400 mb-4">Instagram: <a href="https://www.instagram.com/jyong_05/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">@jyong_05</a></p>
-                        <p class="text-gray-300 leading-relaxed">I am a teenager who aspires to be an entrepreneur. I became an introvert after starting university and now I'm scared of doing presentations, but I will solve this problem one day. I must solve this problem. I will study hard for my exams to be able to work in my target company.</p>
+                        <p class="text-gray-300 leading-relaxed">I am a teenager who aspires to be an entrepreneur. I became an introvert after starting university and now I'm scared of doing presentations, but I will solve this problem one day. I will study hard for my exams to be able to work in my target company.</p>
                     </div>
                 </div>
 
@@ -209,19 +272,18 @@
 
                 <!-- My Posts Section -->
                 <div class="mt-12">
-                    <h3 class="text-3xl font-bold text-blue-400 mb-6">My Posts</h3>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <!-- Placeholder Post 1 -->
-                        <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-                            <img src="https://placehold.co/600x300/1f2937/ffffff?text=Post+Title+1" alt="Placeholder Post 1" class="w-full h-48 object-cover">
+                    <h3 class="text-3xl font-bold text-blue-400 mb-6 text-center">My Posts</h3>
+                    <!-- Centered container for the post card -->
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+                            <!-- The image will now scale proportionally without being cropped -->
+                            <img src="https://junyong.vercel.app/me3.jpg" alt="My First time going Disney Land" class="w-full">
                             <div class="p-6">
-                                <h4 class="text-2xl font-bold text-blue-400 mb-2">My First Programming Language</h4>
-                                <p class="text-gray-400 text-sm mb-4">October 26, 2024</p>
-                                <p class="text-gray-300">A look back at the first programming language I learned and how it shaped my career path.</p>
-                                <a href="#" class="inline-block mt-4 text-blue-400 hover:underline">Read more...</a>
+                                <h4 class="text-2xl font-bold text-blue-400 mb-2">My First time going Disney Land</h4>
+                                <p class="text-gray-400 text-sm mb-4">28 November 2019</p>
+                                <p class="text-gray-300">I travel to china shanghai in 2019 and this is my First time going Disney Land</p>
                             </div>
                         </div>
-                        <!-- Placeholder Post 2 REMOVED -->
                     </div>
                 </div>
             </div>
@@ -296,13 +358,13 @@
                     <div class="bg-gray-800 p-8 rounded-lg shadow-xl">
                         <div class="flex flex-col md:flex-row items-center gap-8">
                             <div class="bg-white p-4 rounded-lg flex-shrink-0">
-                                 <img src="https://healthxaxis.com/wp-content/uploads/2023/05/HXA-Logo-06.png" alt="HealthX Axis Logo" class="h-20 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/200x80/ffffff/1f2937?text=HealthX+Axis';">
+                                 <img src="https://junyong.vercel.app/HealthAxisLogo.png" alt="HealthX Axis Logo" class="h-20 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/200x80/ffffff/1f2937?text=HealthX+Axis';">
                             </div>
                             <div>
                                 <h3 class="text-3xl font-bold text-blue-400">HealthX Axis</h3>
                                 <p class="text-lg text-gray-400 mb-4">Website Development Project</p>
-                                <p class="text-gray-300 leading-relaxed">I had the privilege of collaborating with HealthX Axis, a forward-thinking company in the healthcare technology sector. My role was to lead the development of their new corporate website. The project involved creating a modern, responsive, and user-friendly platform to showcase their services, share insights, and connect with their audience.</p>
-                                <a href="https://healthxaxis.com/" target="_blank" rel="noopener noreferrer" class="animated-button inline-block mt-4 text-white font-bold py-2 px-6 rounded-lg">
+                                <p class="text-gray-300 leading-relaxed">I had the privilege of collaborating with HealthX Axis, a forward-thinking company in the healthcare technology sector. My role was to lead the development of their new corporate website witch is mpppa.</p>
+                                <a href="https://mpppa.org.my" class="animated-button inline-block mt-4 text-white font-bold py-2 px-6 rounded-lg">
                                     Visit Website
                                 </a>
                             </div>
@@ -315,7 +377,7 @@
         <!-- Footer -->
         <footer class="bg-gray-900 bg-opacity-50 mt-12">
             <div class="container mx-auto px-6 py-4 text-center text-gray-400">
-                <p>&copy; 2024 Khoo Jun Yong. All Rights Reserved.</p>
+                <p>&copy; 2025 Khoo Jun Yong. All Rights Reserved.</p>
             </div>
         </footer>
     </div>
@@ -392,7 +454,12 @@
 
             // --- Event Listeners ---
             window.addEventListener('resize', onWindowResize, false);
+            // Add mouse move for desktop
             document.addEventListener('mousemove', onMouseMove, false);
+            // Add device orientation for mobile
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', onDeviceOrientation, false);
+            }
             
             // Start the animation loop
             animate();
@@ -420,6 +487,34 @@
             camera.lookAt(scene.position);
         }
 
+        // --- Handle Device Orientation for Mobile 3D Motion ---
+        function onDeviceOrientation(event) {
+            // event.gamma: left-to-right tilt (-90 to 90)
+            // event.beta: front-to-back tilt (-180 to 180)
+            if (event.gamma === null || event.beta === null) {
+                return; // Exit if data is not available
+            }
+
+            // Normalize the values for smoother control
+            const gamma = event.gamma / 90; // range: -1 to 1
+            const beta = event.beta / 180;  // range: -1 to 1
+            
+            // Define the maximum camera movement range
+            const moveRange = 5;
+
+            // Calculate target camera position based on tilt
+            const targetX = gamma * moveRange;
+            const targetY = beta * moveRange;
+
+            // Smoothly move the camera towards the target position
+            camera.position.x += (targetX - camera.position.x) * 0.05;
+            camera.position.y += (targetY - camera.position.y) * 0.05;
+
+            // Make the camera always look at the center of the scene
+            camera.lookAt(scene.position);
+        }
+
+
         // --- Animation Loop ---
         function animate() {
             // Rotate the stars and moon in each frame
@@ -438,8 +533,16 @@
         const startBtn = document.getElementById('start-btn');
         const landingPage = document.getElementById('landing-page');
         const mainContent = document.getElementById('main-content');
-        const navLinks = document.querySelectorAll('.nav-link');
         const pages = document.querySelectorAll('.content-page');
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // Event listener for the mobile menu button
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Removed touch events for mobile navigation (sliding) as per request
 
         function showPage(pageId, clickedLink) {
             pages.forEach(page => {
@@ -449,12 +552,21 @@
             if (targetPage) {
                 targetPage.style.display = 'block';
             }
-            navLinks.forEach(link => {
+
+            // Close mobile menu if it's open
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+
+            // Update active link state for both menus
+            document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
-            if (clickedLink) {
-                clickedLink.classList.add('active');
-            }
+            
+            // Add active class to all links pointing to the current page
+            document.querySelectorAll(`a[href="#${pageId}"]`).forEach(link => {
+                link.classList.add('active');
+            });
         }
         
         function showLandingPage() {
