@@ -170,7 +170,7 @@
     </style>
 </head>
 <body class="bg-gray-900 text-white">
-    <audio autoplay loop>
+    <audio id="background-music" loop>
         <source src="https://junyong.vercel.app/Payphone.mp3" type="audio/mpeg">
     </audio>
 
@@ -578,6 +578,7 @@
         }
 
         startBtn.addEventListener('click', () => {
+            document.getElementById('background-music').play();
             landingPage.style.display = 'none';
             mainContent.style.display = 'block';
             showPage('about-me', document.querySelector('a[href="#about-me"]'));
@@ -588,5 +589,6 @@
     </script>
 </body>
 </html>
+
 
 
