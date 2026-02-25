@@ -1,0 +1,189 @@
+body {
+            font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+            overflow-x: hidden;
+            /* Custom star cursor */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="gold" stroke="white" stroke-width="0.5"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>') 12 12, auto;
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .content-page {
+            display: none;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom styles for navigation links */
+        .nav-link.active {
+            color: #3b82f6; /* blue-500 */
+            border-bottom: 2px solid #3b82f6;
+            text-shadow: 0 0 5px rgba(59, 130, 246, 0.7);
+        }
+        /* Style for mobile active link */
+        #mobile-menu .nav-link.active {
+            color: #3b82f6;
+            border-bottom: none; /* remove bottom border for mobile */
+            background-color: #4b5563; /* gray-600 */
+        }
+        /* Animation for the title glow effect on the landing page*/
+        @keyframes text-glow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(59, 130, 246, 0.3), 1px 1px 2px rgba(0,0,0,0.9);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.4), 0 0 40px rgba(59, 130, 246, 0.5), 1px 1px 2px rgba(0,0,0,0.9);
+            }
+        }
+        .title-glow {
+            animation: text-glow 5s ease-in-out infinite;
+            color:#00ccff
+        }
+        /* New animation for the subtitle on the landing page*/
+        @keyframes subtitle-glow {
+            0%, 100% {
+                color: #fffb00; /* Tailwind gray-300 */
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+            }
+            50% {
+                color: #d400ff; /* Tailwind amber-400 */
+                text-shadow: 0 0 8px rgba(0, 72, 255, 0.6), 1px 1px 3px rgba(0,0,0,0.9);
+            }
+        }
+        .subtitle-effect {
+            animation: subtitle-glow 4s ease-in-out infinite;
+        }
+        /* New class for the main page titles */
+        .main-title-effect {
+            text-shadow: 2px 2px 4px #000000, 0 0 5px #000000, 0 0 10px #000000;
+            border-bottom: 2px solid #4f46e5; /* indigo-600 for a deeper blue */
+        }
+        /* Custom styles for the main content's `h3` tags */
+        .main-content h3 {
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+        /* New styles for all buttons */
+        .animated-button {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #2da6e7, #c904f6); /* Indigo-700 to Blue-500 */
+            border: none;
+            overflow: hidden;
+            transition: all 1s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .animated-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .animated-button:active {
+            transform: translateY(0);
+        }
+        /* Shine effect on hover */
+        .animated-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+        .animated-button:hover:before {
+            left: 100%;
+        }
+        /* Pulse effect for the landing page button */
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.33);
+            }
+            80%, 100% {
+                opacity: 0;
+            }
+        }
+        .landing-button-pulse:before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 100%;
+            height: 100%;
+            background-color: #3b82f6; /* blue-500 */
+            border-radius: 9999px;
+            animation: pulse-ring 1.5s infinite;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Mobile specific styles for enhanced aesthetics */
+        @media (max-width: 767px) {
+            .title-glow {
+                font-size: 3.5rem; /* Adjust font size for smaller screens */
+            }
+            .subtitle-effect {
+                font-size: 1rem; /* Adjust font size for smaller screens */
+            }
+            .main-title-effect {
+                font-size: 2.5rem; /* Adjust main page title size */
+                margin-bottom: 1.5rem; /* Adjust spacing */
+            }
+            .content-page {
+                padding-left: 1rem;
+                padding-right: 1rem; /* Add horizontal padding for mobile content */
+            }
+            .flex-col.md\:flex-row {
+                flex-direction: column;
+            }
+            .md\:text-left {
+                text-align: center; /* Center text on mobile for profile section */
+            }
+            .h-48.w-32 {
+                height: 12rem; /* Keep image size consistent */
+                width: 8rem;
+                margin-bottom: 1rem; /* Add some space below the image */
+            }
+            .grid.md\:grid-cols-2 {
+                grid-template-columns: 1fr; /* Stack hobby cards vertically on mobile */
+            }
+            .main-content h3 {
+                font-size: 1.75rem; /* Adjust h3 font size for mobile */
+            }
+        }
+
+        /* Glowing animation */
+.glow {
+  animation: pulseGlow 1s infinite alternate;
+}
+
+/* The glow changes strength every 2s */
+@keyframes pulseGlow {
+  from {
+    text-shadow: 0 0 5px #f3da35, 0 0 10px #f3da35;
+  }
+  to {
+    text-shadow: 0 0 20px #f3da35, 0 0 45px #f3da35;
+  }
+}
+
+/* --- Lazy Loading Animation --- */
+
+/* Initial state: hidden and slightly down */
+.lazy-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.6s ease-out;
+}
+
+/* Final state: visible and in place */
+.lazy-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
