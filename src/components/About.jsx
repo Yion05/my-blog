@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion'
 
 const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 40, scale: 0.96 },
     visible: (i = 0) => ({
         opacity: 1,
         y: 0,
+        scale: 1,
         transition: { duration: 0.7, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] },
     }),
 }
@@ -20,7 +21,7 @@ export default function About({ onNext }) {
             <motion.h2
                 variants={fadeUp}
                 custom={0}
-                className="font-orbitron text-4xl md:text-5xl font-bold mb-10 section-title text-neon-cyan"
+                className="font-orbitron text-4xl md:text-5xl font-bold mb-10 section-title gradient-text"
             >
                 About Me
             </motion.h2>
@@ -29,12 +30,13 @@ export default function About({ onNext }) {
             <motion.div
                 variants={fadeUp}
                 custom={1}
-                className="glass-card p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 mb-8"
+                whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                className="glass-card p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 mb-8 tilt-card"
             >
                 <img
-                    src="https://junyong.vercel.app/me2.jpg"
+                    src="pictures/aboutme.jpeg"
                     alt="Khoo Jun Yong"
-                    className="h-56 w-40 object-cover rounded-xl border border-cyber-cyan/20 flex-shrink-0 transition-transform duration-500 hover:scale-105"
+                    className="h-56 w-40 object-cover rounded-xl border border-cyber-cyan/20 flex-shrink-0 transition-transform duration-500 hover:scale-110 img-reveal"
                     onError={(e) => {
                         e.target.onerror = null
                         e.target.src = 'https://placehold.co/160x224/0a0a1a/00f0ff?text=Photo'
@@ -83,7 +85,7 @@ export default function About({ onNext }) {
                 <h3 className="font-orbitron text-2xl font-bold text-cyber-purple mb-4">
                     {'// '}Details
                 </h3>
-                <div className="glass-card p-6 space-y-5 neon-border-purple">
+                <div className="glass-card p-6 space-y-5 neon-border-purple animate-border-shimmer">
                     {[
                         { icon: 'fa-graduation-cap', text: 'Multimedia University', color: 'text-neon-yellow' },
                         { icon: 'fa-location-dot', text: 'Lives in Malaysia', color: 'text-neon-yellow' },
@@ -106,48 +108,80 @@ export default function About({ onNext }) {
                 </div>
             </motion.div>
 
-            {/* My Posts */}
+            {/* My Skills */}
             <motion.div variants={fadeUp} custom={3}>
                 <h3 className="font-orbitron text-2xl font-bold text-cyber-cyan mb-6 text-center">
-                    {'< '}My Posts{' />'}
+                    {'< '}My Skills{' />'}
                 </h3>
-                <div className="max-w-2xl mx-auto">
-                    <div className="glass-card overflow-hidden group">
-                        <div className="overflow-hidden">
-                            <img
-                                src="https://junyong.vercel.app/me3.jpg"
-                                alt="My First time going Disneyland"
-                                className="w-full transition-transform duration-700 group-hover:scale-105"
-                                onError={(e) => {
-                                    e.target.onerror = null
-                                    e.target.src = 'https://placehold.co/800x400/0a0a1a/00f0ff?text=Disneyland'
-                                }}
-                            />
-                        </div>
-                        <div className="p-6">
-                            <h4 className="font-orbitron text-xl font-bold text-cyber-cyan mb-2">
-                                My First Time Visiting{' '}
-                                <span className="text-neon-yellow">Disneyland</span>
-                            </h4>
-                            <p className="font-rajdhani text-gray-500 text-sm mb-3 tracking-wider uppercase">
-                                28 November 2019
-                            </p>
-                            <p className="font-rajdhani text-gray-300 text-lg">
-                                In <span className="text-neon-yellow font-semibold">2019</span>, I traveled to{' '}
-                                <span className="text-cyber-purple font-semibold">Shanghai, China</span>, and this
-                                marked my first visit to{' '}
-                                <span className="text-neon-yellow font-semibold">Disneyland</span>.
-                            </p>
-                        </div>
+                <div className="skills-carousel">
+                    <div className="skills-track">
+                        {[...Array(2)].map((_, setIndex) => {
+                            const skills = [
+                                {
+                                    name: 'HTML',
+                                    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg',
+                                    color: '#E44D26',
+                                    glow: 'rgba(228, 77, 38, 0.4)',
+                                },
+                                {
+                                    name: 'JavaScript',
+                                    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
+                                    color: '#F7DF1E',
+                                    glow: 'rgba(247, 223, 30, 0.4)',
+                                },
+                                {
+                                    name: 'CSS',
+                                    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg',
+                                    color: '#1572B6',
+                                    glow: 'rgba(21, 114, 182, 0.4)',
+                                },
+                                {
+                                    name: 'Python',
+                                    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
+                                    color: '#3776AB',
+                                    glow: 'rgba(55, 118, 171, 0.4)',
+                                },
+                                {
+                                    name: 'Unity',
+                                    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg',
+                                    color: '#FFFFFF',
+                                    glow: 'rgba(255, 255, 255, 0.3)',
+                                },
+                                {
+                                    name: 'C#',
+                                    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg',
+                                    color: '#68217A',
+                                    glow: 'rgba(104, 33, 122, 0.4)',
+                                },
+                            ]
+                            return skills.map((skill, i) => (
+                                <div
+                                    key={`${setIndex}-${i}`}
+                                    className="skill-card"
+                                    style={{
+                                        '--skill-color': skill.color,
+                                        '--skill-glow': skill.glow,
+                                    }}
+                                >
+                                    <img src={skill.icon} alt={skill.name} draggable={false} />
+                                    <span>{skill.name}</span>
+                                </div>
+                            ))
+                        })}
                     </div>
                 </div>
             </motion.div>
 
             {/* Next Page Button */}
             <motion.div variants={fadeUp} custom={4} className="mt-10 text-center">
-                <button onClick={onNext} className="cyber-btn">
+                <motion.button
+                    onClick={onNext}
+                    className="cyber-btn"
+                    whileHover={{ scale: 1.05, boxShadow: '0 0 25px rgba(0,240,255,0.3)' }}
+                    whileTap={{ scale: 0.95 }}
+                >
                     Next Page →
-                </button>
+                </motion.button>
             </motion.div>
         </motion.div>
     )

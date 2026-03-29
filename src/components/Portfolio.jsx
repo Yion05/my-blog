@@ -5,7 +5,7 @@ const projects = [
         title: 'Sudoku Mobile Game',
         titleColor: 'text-orange-400',
         subtitle: 'Mobile App Development',
-        logo: 'https://junyong.vercel.app/sudoku_icon.jpeg',
+        logo: 'pictures/sudoku_icon.jpeg',
         logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=Sudoku',
         logoBg: 'bg-gray-800/50',
         description: (
@@ -47,7 +47,7 @@ const projects = [
         title: 'HealthX Axis',
         titleColor: 'text-green-400',
         subtitle: 'Website Development Project',
-        logo: 'https://junyong.vercel.app/HealthAxisLogo.png',
+        logo: 'pictures/healthX logo.jpeg',
         logoFallback: 'https://placehold.co/200x80/ffffff/0a0a1a?text=HealthX+Axis',
         logoBg: 'bg-white/90',
         description: (
@@ -111,12 +111,17 @@ const projects = [
     },
 ]
 
-const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: (i = 0) => ({
+const cardVariants = {
+    hidden: (i) => ({
+        opacity: 0,
+        x: i % 2 === 0 ? -80 : 80,
+        rotateY: i % 2 === 0 ? -10 : 10,
+    }),
+    visible: (i) => ({
         opacity: 1,
-        y: 0,
-        transition: { duration: 0.7, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] },
+        x: 0,
+        rotateY: 0,
+        transition: { duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] },
     }),
 }
 
@@ -128,9 +133,10 @@ export default function Portfolio() {
             className="max-w-5xl mx-auto"
         >
             <motion.h2
-                variants={fadeUp}
-                custom={0}
-                className="font-orbitron text-4xl md:text-5xl font-bold mb-10 section-title text-neon-cyan"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="font-orbitron text-4xl md:text-5xl font-bold mb-10 section-title gradient-text"
             >
                 Portfolio & Cooperation
             </motion.h2>
@@ -139,15 +145,36 @@ export default function Portfolio() {
                 {projects.map((project, i) => (
                     <motion.div
                         key={i}
-                        variants={fadeUp}
+                        variants={cardVariants}
                         custom={i + 1}
-                        className="glass-card p-6 md:p-8"
+                        whileHover={{
+                            y: -6,
+                            transition: { duration: 0.3 },
+                        }}
+                        className="glass-card p-6 md:p-8 tilt-card group relative overflow-hidden"
                     >
-                        <div className="flex flex-col md:flex-row items-center gap-8">
-                            {/* Logo or Icon */}
+                        {/* Animated corner accent */}
+                        <motion.div
+                            className="absolute top-0 left-0 w-16 h-16"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.3 + i * 0.1 }}
+                        >
+                            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-cyber-cyan to-transparent" />
+                            <div className="absolute top-0 left-0 h-full w-[2px] bg-gradient-to-b from-cyber-cyan to-transparent" />
+                        </motion.div>
+
+                        {/* Background glow on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-cyber-cyan/5 via-transparent to-cyber-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-2xl" />
+
+                        <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                            {/* Logo or Icon with float animation on hover */}
                             {project.logo ? (
-                                <div
+                                <motion.div
                                     className={`${project.logoBg} p-4 rounded-xl flex-shrink-0 flex items-center justify-center min-w-[120px]`}
+                                    whileHover={{ y: -5, rotate: 3 }}
+                                    transition={{ type: 'spring', stiffness: 300 }}
                                 >
                                     <img
                                         src={project.logo}
@@ -158,7 +185,7 @@ export default function Portfolio() {
                                             e.target.src = project.logoFallback
                                         }}
                                     />
-                                </div>
+                                </motion.div>
                             ) : (
                                 <div className="bg-gradient-to-br from-cyber-purple/20 to-cyber-cyan/10 p-6 rounded-xl flex-shrink-0 flex items-center justify-center min-w-[120px] min-h-[88px] neon-border-purple">
                                     <i className={`${project.logoIcon || 'fa-solid fa-code'} text-4xl text-cyber-purple`} />
@@ -174,16 +201,25 @@ export default function Portfolio() {
                                     {project.subtitle}
                                 </p>
 
-                                {/* Tags */}
+                                {/* Tags with pop-in animation */}
                                 {project.tags && (
                                     <div className="flex flex-wrap gap-2 mb-4 justify-center md:justify-start">
                                         {project.tags.map((tag, j) => (
-                                            <span
+                                            <motion.span
                                                 key={j}
+                                                initial={{ scale: 0, opacity: 0 }}
+                                                whileInView={{ scale: 1, opacity: 1 }}
+                                                viewport={{ once: true }}
+                                                transition={{
+                                                    delay: 0.3 + j * 0.1,
+                                                    type: 'spring',
+                                                    stiffness: 400,
+                                                    damping: 15,
+                                                }}
                                                 className="px-3 py-1 text-xs font-orbitron tracking-wider rounded-full border border-cyber-cyan/20 text-cyber-cyan/70 bg-cyber-cyan/5"
                                             >
                                                 {tag}
-                                            </span>
+                                            </motion.span>
                                         ))}
                                     </div>
                                 )}
@@ -193,14 +229,16 @@ export default function Portfolio() {
                                 </p>
 
                                 {project.link && (
-                                    <a
+                                    <motion.a
                                         href={project.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="cyber-btn inline-block text-sm"
+                                        whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(0,240,255,0.3)' }}
+                                        whileTap={{ scale: 0.95 }}
                                     >
                                         {project.linkText}
-                                    </a>
+                                    </motion.a>
                                 )}
                             </div>
                         </div>

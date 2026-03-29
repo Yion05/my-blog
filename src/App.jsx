@@ -10,8 +10,14 @@ import Portfolio from './components/Portfolio'
 import Footer from './components/Footer'
 
 const pageVariants = {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+    initial: { opacity: 0, y: 40, scale: 0.96, rotateX: 4 },
+    animate: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        rotateX: 0,
+        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+    },
 }
 
 const pages = {
@@ -73,7 +79,7 @@ export default function App() {
         <div className="min-h-screen scanline-overlay">
             {/* Background Music */}
             <audio ref={audioRef} loop preload="auto">
-                <source src="https://junyong.vercel.app/Payphone.mp3" type="audio/mpeg" />
+                <source src="song/yujian.mp3" type="audio/mpeg" />
             </audio>
 
             {/* Three.js Background */}
