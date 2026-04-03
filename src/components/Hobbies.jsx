@@ -6,45 +6,92 @@ const hobbies = [
         titleColor: 'text-green-400',
         image: 'pictures/Ping pong.jpeg',
         fallback: 'https://placehold.co/400x300/0a0a1a/00f0ff?text=Ping+Pong',
-        description: (
-            <>
-                I really enjoy playing <span className="text-green-400 font-semibold">ping pong</span>, and I play{' '}
-                <span className="text-neon-yellow font-semibold">twice a week</span> at the{' '}
-                <span className="text-cyber-cyan font-semibold">MMU mini sports hall</span>.
-            </>
-        ),
+        segments: [
+            { text: "I really enjoy playing " },
+            { text: "ping pong", className: "text-green-400 font-semibold" },
+            { text: ", and I play " },
+            { text: "twice a week", className: "text-neon-yellow font-semibold" },
+            { text: " at the " },
+            { text: "MMU mini sports hall", className: "text-cyber-cyan font-semibold" },
+            { text: "." }
+        ]
     },
     {
         title: 'Collecting',
         titleColor: 'text-orange-400',
         image: 'pictures/Collecting.jpeg',
         fallback: 'https://placehold.co/400x300/0a0a1a/00f0ff?text=Collecting',
-        description: (
-            <>
-                I have a passion for collecting items with <span className="text-orange-400 font-semibold">history</span> and{' '}
-                <span className="text-pink-400 font-semibold">nostalgia</span>, such as{' '}
-                <span className="text-neon-yellow font-semibold">old money</span>,{' '}
-                <span className="text-red-400 font-semibold">Pokémon cards</span>, and other{' '}
-                <span className="text-cyber-purple font-semibold">unique memorabilia</span>.
-            </>
-        ),
+        segments: [
+            { text: "I have a passion for collecting items with " },
+            { text: "history", className: "text-orange-400 font-semibold" },
+            { text: " and " },
+            { text: "nostalgia", className: "text-pink-400 font-semibold" },
+            { text: ", such as " },
+            { text: "old money", className: "text-neon-yellow font-semibold" },
+            { text: ", " },
+            { text: "Pokémon cards", className: "text-red-400 font-semibold" },
+            { text: ", and other " },
+            { text: "unique memorabilia", className: "text-cyber-purple font-semibold" },
+            { text: "." }
+        ]
     },
     {
         title: 'Traveling',
         titleColor: 'text-cyber-purple',
         image: 'pictures/me2.jpeg',
         fallback: 'https://placehold.co/400x300/0a0a1a/00f0ff?text=Traveling',
-        description: (
-            <>
-                Exploring new <span className="text-cyber-cyan font-semibold">cultures</span>,{' '}
-                <span className="text-orange-400 font-semibold">cuisines</span>, and{' '}
-                <span className="text-green-400 font-semibold">landscapes</span> broadens my{' '}
-                <span className="text-neon-yellow font-semibold">perspective</span> and fuels my{' '}
-                <span className="text-pink-400 font-semibold">creativity</span>.
-            </>
-        ),
+        segments: [
+            { text: "Exploring new " },
+            { text: "cultures", className: "text-cyber-cyan font-semibold" },
+            { text: ", " },
+            { text: "cuisines", className: "text-orange-400 font-semibold" },
+            { text: ", and " },
+            { text: "landscapes", className: "text-green-400 font-semibold" },
+            { text: " broadens my " },
+            { text: "perspective", className: "text-neon-yellow font-semibold" },
+            { text: " and fuels my " },
+            { text: "creativity", className: "text-pink-400 font-semibold" },
+            { text: "." }
+        ]
     },
 ]
+
+const AnimatedText = ({ segments }) => (
+    <motion.span
+        variants={{
+            hidden: { opacity: 1 },
+            visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.03 }
+            }
+        }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+    >
+        {segments.map((seg, i) => {
+            const parts = seg.text.split(/(\s+)/);
+            return parts.map((part, j) => {
+                if (!part) return null;
+                if (/\s+/.test(part)) {
+                    return <span key={`${i}-${j}`}>{part}</span>;
+                }
+                return (
+                    <motion.span
+                        key={`${i}-${j}`}
+                        variants={{
+                            hidden: { opacity: 0, filter: 'blur(4px)', y: 4 },
+                            visible: { opacity: 1, filter: 'blur(0px)', y: 0, transition: { duration: 0.3 } }
+                        }}
+                        className={`inline-block ${seg.className || ''}`}
+                    >
+                        {part}
+                    </motion.span>
+                );
+            });
+        })}
+    </motion.span>
+);
 
 const cardVariants = {
     hidden: { opacity: 0, y: 60, scale: 0.9 },
@@ -117,7 +164,7 @@ export default function Hobbies({ onNext }) {
                                 {hobby.title}
                             </motion.h3>
                             <p className="font-rajdhani text-gray-300 text-lg leading-relaxed">
-                                {hobby.description}
+                                <AnimatedText segments={hobby.segments} />
                             </p>
                         </div>
 

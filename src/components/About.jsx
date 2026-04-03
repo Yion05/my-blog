@@ -10,6 +10,26 @@ const fadeUp = {
     }),
 }
 
+const bioSegments = [
+    { text: "Hi everyone, my name is " },
+    { text: "Khoo Jun Yong", className: "text-cyber-cyan font-semibold" },
+    { text: ". I'm 21 years old this year, though people often say I still look quite young. According to my MBTI test, I'm an " },
+    { text: "ENFJ-A", className: "text-red-400 font-semibold" },
+    { text: ". Currently, I'm pursuing a " },
+    { text: "DEGREE", className: "text-neon-yellow font-semibold" },
+    { text: " in " },
+    { text: "Computer Science", className: "text-cyber-cyan font-semibold" },
+    { text: " with a focus on " },
+    { text: "Artificial Intelligence", className: "text-cyber-purple font-semibold" },
+    { text: " at " },
+    { text: "Multimedia University", className: "text-red-500 font-semibold" },
+    { text: ". At the same time, I work as a part-time " },
+    { text: "freelance web developer", className: "text-cyber-purple font-semibold" },
+    { text: " to gain " },
+    { text: "EXPERIENCE", className: "text-neon-yellow font-bold" },
+    { text: " and earn some extra income. I'm determined to study hard so that I can one day join the company I've always dreamed of." }
+];
+
 export default function About({ onNext }) {
     return (
         <motion.div
@@ -43,7 +63,7 @@ export default function About({ onNext }) {
                     }}
                 />
                 <div className="flex-1 text-center md:text-left">
-                    <h3 className="font-orbitron text-2xl font-bold text-neon-yellow mb-1">
+                    <h3 className="font-orbitron text-2xl font-bold text-neon-yellow mb-1 glitch-text">
                         Khoo Jun Yong
                     </h3>
                     <p className="font-rajdhani text-gray-400 mb-4">
@@ -57,26 +77,41 @@ export default function About({ onNext }) {
                             @jyong_05
                         </a>
                     </p>
-                    <p className="font-rajdhani text-gray-300 leading-relaxed text-justify text-lg">
-                        Hi everyone, my name is{' '}
-                        <span className="text-cyber-cyan font-semibold">Khoo Jun Yong</span>.
-                        I'm 21 years old this year, though people often say I still look quite young.
-                        According to my MBTI test, I'm an{' '}
-                        <span className="text-red-400 font-semibold">ENFJ-A</span>.
-                        Currently, I'm pursuing a{' '}
-                        <span className="text-neon-yellow font-semibold">DEGREE</span> in{' '}
-                        <span className="text-cyber-cyan font-semibold">Computer Science</span>{' '}
-                        with a focus on{' '}
-                        <span className="text-cyber-purple font-semibold">Artificial Intelligence</span>{' '}
-                        at{' '}
-                        <span className="text-red-500 font-semibold">Multimedia University</span>.
-                        At the same time, I work as a part-time{' '}
-                        <span className="text-cyber-purple font-semibold">freelance web developer</span>{' '}
-                        to gain{' '}
-                        <span className="text-neon-yellow font-bold">EXPERIENCE</span>{' '}
-                        and earn some extra income. I'm determined to study hard so that I can one day
-                        join the company I've always dreamed of.
-                    </p>
+                    <motion.p
+                        className="font-rajdhani text-gray-300 leading-relaxed text-justify text-lg"
+                        variants={{
+                            hidden: { opacity: 1 },
+                            visible: {
+                                opacity: 1,
+                                transition: { staggerChildren: 0.03 }
+                            }
+                        }}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                    >
+                        {bioSegments.map((seg, i) => {
+                            const parts = seg.text.split(/(\s+)/);
+                            return parts.map((part, j) => {
+                                if (!part) return null;
+                                if (/\s+/.test(part)) {
+                                    return <span key={`${i}-${j}`}>{part}</span>;
+                                }
+                                return (
+                                    <motion.span
+                                        key={`${i}-${j}`}
+                                        variants={{
+                                            hidden: { opacity: 0, filter: 'blur(4px)', y: 4 },
+                                            visible: { opacity: 1, filter: 'blur(0px)', y: 0, transition: { duration: 0.3 } }
+                                        }}
+                                        className={`inline-block ${seg.className || ''}`}
+                                    >
+                                        {part}
+                                    </motion.span>
+                                );
+                            });
+                        })}
+                    </motion.p>
                 </div>
             </motion.div>
 

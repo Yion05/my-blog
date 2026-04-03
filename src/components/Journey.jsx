@@ -5,43 +5,96 @@ const journeyData = [
         title: 'My University',
         image: 'pictures/university.jpeg',
         fallback: 'https://placehold.co/800x400/0a0a1a/00f0ff?text=University',
-        content: (
-            <>
-                My journey into the world of <span className="text-cyber-cyan font-semibold">technology</span> began at my academy. After successfully completing
-                my <span className="text-green-400 font-semibold">middle</span> and <span className="text-green-400 font-semibold">secondary school</span> exams, I enrolled at{' '}
-                <span className="text-neon-yellow font-bold">Multimedia University (MMU) Melaka</span>.
-            </>
-        ),
+        segments: [
+            { text: "My journey into the world of " },
+            { text: "technology", className: "text-cyber-cyan font-semibold" },
+            { text: " began at my academy. After successfully completing my " },
+            { text: "middle", className: "text-green-400 font-semibold" },
+            { text: " and " },
+            { text: "secondary school", className: "text-green-400 font-semibold" },
+            { text: " exams, I enrolled at " },
+            { text: "Multimedia University (MMU) Melaka", className: "text-neon-yellow font-bold" },
+            { text: "." }
+        ]
     },
     {
         title: 'Education & Growth',
-        content: (
-            <>
-                I subsequently enrolled in a comprehensive <span className="text-cyber-cyan font-semibold">Computer Science</span> with{' '}
-                <span className="text-cyber-purple font-semibold">Artificial Intelligence</span>{' '}
-                program. Here, I've delved deeper into <span className="text-orange-400 font-semibold">database management</span>,{' '}
-                <span className="text-pink-400 font-semibold">operating systems</span> and{' '}
-                <span className="text-green-400 font-semibold">advanced web technologies</span>. I chose this course due to my fascination with{' '}
-                <span className="text-neon-yellow font-semibold">new technologies</span> and my
-                strong desire to learn more about the field of <span className="text-cyber-purple font-bold">AI</span>.
-            </>
-        ),
+        segments: [
+            { text: "I subsequently enrolled in a comprehensive " },
+            { text: "Computer Science", className: "text-cyber-cyan font-semibold" },
+            { text: " with " },
+            { text: "Artificial Intelligence", className: "text-cyber-purple font-semibold" },
+            { text: " program. Here, I've delved deeper into " },
+            { text: "database management", className: "text-orange-400 font-semibold" },
+            { text: ", " },
+            { text: "operating systems", className: "text-pink-400 font-semibold" },
+            { text: " and " },
+            { text: "advanced web technologies", className: "text-green-400 font-semibold" },
+            { text: ". I chose this course due to my fascination with " },
+            { text: "new technologies", className: "text-neon-yellow font-semibold" },
+            { text: " and my strong desire to learn more about the field of " },
+            { text: "AI", className: "text-cyber-purple font-bold" },
+            { text: "." }
+        ]
     },
     {
         title: 'Future Aspirations',
-        content: (
-            <>
-                I am always exploring <span className="text-cyber-cyan font-semibold">new technologies</span> and continuously building my{' '}
-                <span className="text-neon-yellow font-semibold">skills</span>. My goal is to
-                work on <span className="text-orange-400 font-semibold">exciting projects</span> that push the boundaries of what's possible with{' '}
-                <span className="text-green-400 font-bold">code</span>. I am
-                passionate about <span className="text-pink-400 font-semibold">problem-solving</span> and eager to contribute to{' '}
-                <span className="text-cyber-purple font-semibold">innovative web applications</span>,
-                learning from <span className="text-red-400 font-semibold">real-world challenges</span>.
-            </>
-        ),
+        segments: [
+            { text: "I am always exploring " },
+            { text: "new technologies", className: "text-cyber-cyan font-semibold" },
+            { text: " and continuously building my " },
+            { text: "skills", className: "text-neon-yellow font-semibold" },
+            { text: ". My goal is to work on " },
+            { text: "exciting projects", className: "text-orange-400 font-semibold" },
+            { text: " that push the boundaries of what's possible with " },
+            { text: "code", className: "text-green-400 font-bold" },
+            { text: ". I am passionate about " },
+            { text: "problem-solving", className: "text-pink-400 font-semibold" },
+            { text: " and eager to contribute to " },
+            { text: "innovative web applications", className: "text-cyber-purple font-semibold" },
+            { text: ", learning from " },
+            { text: "real-world challenges", className: "text-red-400 font-semibold" },
+            { text: "." }
+        ]
     },
 ]
+
+const AnimatedText = ({ segments }) => (
+    <motion.span
+        variants={{
+            hidden: { opacity: 1 },
+            visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.03 }
+            }
+        }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+    >
+        {segments.map((seg, i) => {
+            const parts = seg.text.split(/(\s+)/);
+            return parts.map((part, j) => {
+                if (!part) return null;
+                if (/\s+/.test(part)) {
+                    return <span key={`${i}-${j}`}>{part}</span>;
+                }
+                return (
+                    <motion.span
+                        key={`${i}-${j}`}
+                        variants={{
+                            hidden: { opacity: 0, filter: 'blur(4px)', y: 4 },
+                            visible: { opacity: 1, filter: 'blur(0px)', y: 0, transition: { duration: 0.3 } }
+                        }}
+                        className={`inline-block ${seg.className || ''}`}
+                    >
+                        {part}
+                    </motion.span>
+                );
+            });
+        })}
+    </motion.span>
+);
 
 const cardVariants = {
     hidden: { opacity: 0, x: -60, rotateY: -8 },
@@ -120,7 +173,7 @@ export default function Journey({ onNext }) {
                                             {item.title}
                                         </h3>
                                         <p className="font-rajdhani text-gray-300 leading-relaxed text-lg">
-                                            {item.content}
+                                            <AnimatedText segments={item.segments} />
                                         </p>
                                     </div>
                                 </div>
@@ -131,7 +184,7 @@ export default function Journey({ onNext }) {
                                         {item.title}
                                     </h3>
                                     <p className="font-rajdhani text-gray-300 leading-relaxed text-lg">
-                                        {item.content}
+                                        <AnimatedText segments={item.segments} />
                                     </p>
                                 </>
                             )}

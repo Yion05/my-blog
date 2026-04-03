@@ -8,16 +8,21 @@ const projects = [
         logo: 'pictures/sudoku_icon.jpeg',
         logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=Sudoku',
         logoBg: 'bg-gray-800/50',
-        description: (
-            <>
-                My very first <span className="text-neon-yellow font-bold">mobile app</span> development project. I designed the{' '}
-                <span className="text-green-400 font-semibold">game backgrounds</span>,{' '}
-                <span className="text-cyber-purple font-semibold">logos</span>, and{' '}
-                <span className="text-pink-400 font-semibold">store descriptions</span> from scratch, and handled all the{' '}
-                <span className="text-red-400 font-semibold">bug fixes</span> to ensure a smooth{' '}
-                <span className="text-cyber-cyan font-semibold">puzzle-solving experience</span> for players.
-            </>
-        ),
+        segments: [
+            { text: "My very first " },
+            { text: "mobile app", className: "text-neon-yellow font-bold" },
+            { text: " development project. I designed the " },
+            { text: "game backgrounds", className: "text-green-400 font-semibold" },
+            { text: ", " },
+            { text: "logos", className: "text-cyber-purple font-semibold" },
+            { text: ", and " },
+            { text: "store descriptions", className: "text-pink-400 font-semibold" },
+            { text: " from scratch, and handled all the " },
+            { text: "bug fixes", className: "text-red-400 font-semibold" },
+            { text: " to ensure a smooth " },
+            { text: "puzzle-solving experience", className: "text-cyber-cyan font-semibold" },
+            { text: " for players." }
+        ],
         link: 'https://play.google.com/store/apps/details?id=com.junyong.sudoku',
         linkText: 'View on Google Play',
         tags: ['Mobile App', 'Game Development'],
@@ -29,16 +34,20 @@ const projects = [
         logo: 'https://yion.vercel.app/logo2.png',
         logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=Yion',
         logoBg: 'bg-gray-800/50',
-        description: (
-            <>
-                <span className="text-cyber-cyan font-semibold">Yion</span> is a personal workshop project I developed to explore{' '}
-                <span className="text-neon-yellow font-semibold">new web technologies</span> and showcase my skills. It's a platform where I experiment with{' '}
-                <span className="text-green-400 font-semibold">front-end frameworks</span> and build{' '}
-                <span className="text-orange-400 font-semibold">creative components</span>. This project represents my passion for{' '}
-                <span className="text-pink-400 font-semibold">continuous learning</span> and my dedication to mastering the craft of{' '}
-                <span className="text-cyber-purple font-bold">web development</span>.
-            </>
-        ),
+        segments: [
+            { text: "Yion", className: "text-cyber-cyan font-semibold" },
+            { text: " is a personal workshop project I developed to explore " },
+            { text: "new web technologies", className: "text-neon-yellow font-semibold" },
+            { text: " and showcase my skills. It's a platform where I experiment with " },
+            { text: "front-end frameworks", className: "text-green-400 font-semibold" },
+            { text: " and build " },
+            { text: "creative components", className: "text-orange-400 font-semibold" },
+            { text: ". This project represents my passion for " },
+            { text: "continuous learning", className: "text-pink-400 font-semibold" },
+            { text: " and my dedication to mastering the craft of " },
+            { text: "web development", className: "text-cyber-purple font-bold" },
+            { text: "." }
+        ],
         link: 'https://yion.vercel.app',
         linkText: 'Visit Workshop',
         tags: ['Web Development', 'Personal'],
@@ -50,22 +59,19 @@ const projects = [
         logo: 'pictures/healthX logo.jpeg',
         logoFallback: 'https://placehold.co/200x80/ffffff/0a0a1a?text=HealthX+Axis',
         logoBg: 'bg-white/90',
-        description: (
-            <>
-                I had the privilege of collaborating with <span className="text-green-400 font-bold">HealthX Axis</span>, a forward-thinking company in the{' '}
-                <span className="text-cyber-cyan font-semibold">healthcare technology</span> sector. My role was to lead the{' '}
-                <span className="text-orange-400 font-semibold">development</span> of their new{' '}
-                <span className="text-neon-yellow font-semibold">corporate website</span>, which is{' '}
-                <a
-                    href="https://mpppa.org.my"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-cyber-purple hover:underline font-semibold"
-                >
-                    mpppa.org.my
-                </a>.
-            </>
-        ),
+        segments: [
+            { text: "I had the privilege of collaborating with " },
+            { text: "HealthX Axis", className: "text-green-400 font-bold" },
+            { text: ", a forward-thinking company in the " },
+            { text: "healthcare technology", className: "text-cyber-cyan font-semibold" },
+            { text: " sector. My role was to lead the " },
+            { text: "development", className: "text-orange-400 font-semibold" },
+            { text: " of their new " },
+            { text: "corporate website", className: "text-neon-yellow font-semibold" },
+            { text: ", which is " },
+            { text: "mpppa.org.my", className: "text-cyber-purple hover:underline font-semibold", href: "https://mpppa.org.my" },
+            { text: "." }
+        ],
         link: 'https://mpppa.org.my',
         linkText: 'Visit Website',
         tags: ['Web Development', 'Healthcare'],
@@ -77,17 +83,23 @@ const projects = [
         logo: 'https://purepng.com/public/uploads/large/purepng.com-lexus-logoslexusluxury-vehicletoyotalexus-logos-1701527516757eqw1o.png',
         logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=Lexus',
         logoBg: 'bg-white/90',
-        description: (
-            <>
-                Together with my <span className="text-cyber-cyan font-semibold">team</span>, we developed the{' '}
-                <span className="text-green-400 font-semibold">frontend</span> and{' '}
-                <span className="text-orange-400 font-semibold">backend</span> system for the{' '}
-                <span className="text-neon-yellow font-bold">Lexus roadshow</span> event, which includes{' '}
-                <span className="text-pink-400 font-semibold">OTP verification</span> and a{' '}
-                <span className="text-cyber-purple font-semibold">login feature</span> that stores data{' '}
-                <span className="text-red-400 font-semibold">securely</span> in the database.
-            </>
-        ),
+        segments: [
+            { text: "Together with my " },
+            { text: "team", className: "text-cyber-cyan font-semibold" },
+            { text: ", we developed the " },
+            { text: "frontend", className: "text-green-400 font-semibold" },
+            { text: " and " },
+            { text: "backend", className: "text-orange-400 font-semibold" },
+            { text: " system for the " },
+            { text: "Lexus roadshow", className: "text-neon-yellow font-bold" },
+            { text: " event, which includes " },
+            { text: "OTP verification", className: "text-pink-400 font-semibold" },
+            { text: " and a " },
+            { text: "login feature", className: "text-cyber-purple font-semibold" },
+            { text: " that stores data " },
+            { text: "securely", className: "text-red-400 font-semibold" },
+            { text: " in the database." }
+        ],
         link: 'https://lexusexperienceamazing.com.my',
         linkText: 'Visit Website',
         tags: ['Web Development', 'Automotive'],
@@ -99,17 +111,65 @@ const projects = [
         logo: 'https://csps.vercel.app/picture/logo.png',
         logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=CSPS',
         logoBg: 'bg-white/90',
-        description: (
-            <>
-                I made this <span className="text-cyber-cyan font-semibold">website</span> with{' '}
-                <span className="text-neon-yellow font-semibold">client's design</span>.
-            </>
-        ),
+        segments: [
+            { text: "I made this " },
+            { text: "website", className: "text-cyber-cyan font-semibold" },
+            { text: " with " },
+            { text: "client's design", className: "text-neon-yellow font-semibold" },
+            { text: "." }
+        ],
         link: 'https://csps.vercel.app/',
         linkText: 'Visit Website',
         tags: ['Web Development', 'Client Work'],
     },
 ]
+
+const AnimatedText = ({ segments }) => (
+    <motion.span
+        variants={{
+            hidden: { opacity: 1 },
+            visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.03 }
+            }
+        }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+    >
+        {segments.map((seg, i) => {
+            const parts = seg.text.split(/(\s+)/);
+            return parts.map((part, j) => {
+                if (!part) return null;
+                if (/\s+/.test(part)) {
+                    return <span key={`${i}-${j}`}>{part}</span>;
+                }
+                
+                const spanContent = (
+                    <motion.span
+                        variants={{
+                            hidden: { opacity: 0, filter: 'blur(4px)', y: 4 },
+                            visible: { opacity: 1, filter: 'blur(0px)', y: 0, transition: { duration: 0.3 } }
+                        }}
+                        className={`inline-block ${seg.className || ''}`}
+                    >
+                        {part}
+                    </motion.span>
+                );
+
+                if (seg.href) {
+                    return (
+                        <a key={`${i}-${j}`} href={seg.href} target="_blank" rel="noopener noreferrer">
+                            {spanContent}
+                        </a>
+                    );
+                }
+
+                return <span key={`${i}-${j}`}>{spanContent}</span>;
+            });
+        })}
+    </motion.span>
+);
 
 const cardVariants = {
     hidden: (i) => ({
@@ -225,7 +285,7 @@ export default function Portfolio() {
                                 )}
 
                                 <p className="font-rajdhani text-gray-300 leading-relaxed text-lg mb-5">
-                                    {project.description}
+                                    <AnimatedText segments={project.segments} />
                                 </p>
 
                                 {project.link && (
