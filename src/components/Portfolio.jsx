@@ -10,8 +10,8 @@ const projects = [
         logoBg: 'bg-gray-800/50',
         segments: [
             { text: "My very first " },
-            { text: "mobile app", className: "text-neon-yellow font-bold" },
-            { text: " development project. I designed the " },
+            { text: "google play store mobile app", className: "text-neon-yellow font-bold" },
+            { text: " development project. I designed all things such as the " },
             { text: "game backgrounds", className: "text-green-400 font-semibold" },
             { text: ", " },
             { text: "logos", className: "text-cyber-purple font-semibold" },
@@ -26,6 +26,26 @@ const projects = [
         link: 'https://play.google.com/store/apps/details?id=com.junyong.sudoku',
         linkText: 'View on Google Play',
         tags: ['Mobile App', 'Game Development'],
+    },
+    {
+        title: 'Yion Ai Agent',
+        titleColor: 'text-yellow-400',
+        subtitle: 'Personal Project',
+        logo: 'pictures/yion-ai.jpeg',
+        logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=Yion-ai',
+        logoBg: 'bg-gray-800/50',
+        segments: [
+            { text: "I " },
+            { text: "independently developed", className: "text-green-400 font-semibold" },
+            { text: " this " },
+            { text: "AI agent", className: "text-cyber-purple font-bold" },
+            { text: " by integrating modern language models with the " },
+            { text: "Google Search API", className: "text-orange-400 font-semibold" },
+            { text: " to create a smart, autonomous assistant." }
+        ],
+        link: 'https://yion.my',
+        linkText: 'Visit AI Agent',
+        tags: ['AI Integration', 'Personal'],
     },
     {
         title: 'Yion Workshop',
@@ -58,7 +78,7 @@ const projects = [
         subtitle: 'Website Development Project',
         logo: 'pictures/healthX logo.jpeg',
         logoFallback: 'https://placehold.co/200x80/ffffff/0a0a1a?text=HealthX+Axis',
-        logoBg: 'bg-white/90',
+        logoBg: 'bg-gray-800/50',
         segments: [
             { text: "I had the privilege of collaborating with " },
             { text: "HealthX Axis", className: "text-green-400 font-bold" },
@@ -112,16 +132,126 @@ const projects = [
         logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=CSPS',
         logoBg: 'bg-white/90',
         segments: [
-            { text: "I made this " },
+            { text: "I developed this " },
             { text: "website", className: "text-cyber-cyan font-semibold" },
-            { text: " with " },
+            { text: " accurately translating the " },
             { text: "client's design", className: "text-neon-yellow font-semibold" },
-            { text: "." }
+            { text: " into functional code." }
         ],
         link: 'https://csps.vercel.app/',
         linkText: 'Visit Website',
         tags: ['Web Development', 'Client Work'],
     },
+    {
+        title: 'SWSG Website',
+        titleColor: 'text-cyber-purple',
+        subtitle: 'Website Development Project',
+        logo: 'https://csps.vercel.app/picture/logo.png',
+        logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=SWSG',
+        logoBg: 'bg-white/90',
+        segments: [
+            { text: "I collaborated with my friends to build this " },
+            { text: "website", className: "text-pink-400 font-semibold" },
+            { text: ", carefully implementing the " },
+            { text: "client's design", className: "text-green-400 font-semibold" },
+            { text: " requirements." }
+        ],
+        link: 'https://swsg1.vercel.app/',
+        linkText: 'Visit Website',
+        tags: ['Web Development', 'Client Work'],
+    },
+    {
+        title: 'Mosaic Residence',
+        titleColor: 'text-blue-400',
+        subtitle: 'Website Development Project',
+        logo: 'pictures/mosaic.jpg',
+        logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=Mosaic',
+        logoBg: 'bg-white/90',
+        segments: [
+            { text: "My team and I developed this " },
+            { text: "website", className: "text-orange-400 font-semibold" },
+            { text: ", bringing the " },
+            { text: "client's design", className: "text-cyber-purple font-semibold" },
+            { text: " vision to life." }
+        ],
+        link: 'https://mosaic-residence.my',
+        linkText: 'Visit Website',
+        tags: ['Web Development', 'Client Work'],
+    },
+    {
+        title: 'EPF-Calculate-Simulator',
+        titleColor: 'text-teal-400',
+        subtitle: 'Personal Project',
+        logo: 'pictures/epf-cal.png',
+        logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=EPF',
+        logoBg: 'bg-white/90',
+        segments: [
+            { text: "I independently developed this " },
+            { text: "simulator", className: "text-teal-400 font-semibold" },
+            { text: " as a " },
+            { text: "personal project", className: "text-blue-400 font-semibold" },
+            { text: " to help users estimate their EPF calculations." }
+        ],
+        link: 'https://yion05.my',
+        linkText: 'Visit Website',
+        tags: ['Web Development', 'Utility'],
+    },
+    {
+        title: 'Solidventura',
+        titleColor: 'text-red-400',
+        subtitle: 'Website Development Project',
+        logo: 'pictures/svr.jpg',
+        logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=Solidventura',
+        logoBg: 'bg-white/90',
+        segments: [
+            { text: "My team and I built this " },
+            { text: "website", className: "text-red-400 font-semibold" },
+            { text: " featuring our " },
+            { text: "custom design", className: "text-yellow-400 font-semibold" },
+            { text: " and interactive elements." }
+        ],
+        link: 'https://solidventura.com',
+        linkText: 'Visit Website',
+        tags: ['Web Development', 'Client Work'],
+    },
+    {
+        title: 'Consen Renovation Construction',
+        titleColor: 'text-fuchsia-400',
+        subtitle: 'Website Development Project',
+        logo: 'pictures/CRC.png',
+        logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=CRC',
+        logoBg: 'bg-gray-800/50',
+        segments: [
+            { text: "I independently designed and developed this " },
+            { text: "corporate website", className: "text-fuchsia-400 font-semibold" },
+            { text: " from scratch for the " },
+            { text: "client", className: "text-green-400 font-semibold" },
+            { text: "." }
+        ],
+        link: 'https://crcjj.vercel.app/',
+        linkText: 'Visit Website',
+        tags: ['Web Development', 'Client Work'],
+    },
+    {
+        title: 'PD Leisure',
+        titleColor: 'text-indigo-400',
+        subtitle: 'Website Development Project',
+        logo: 'https://www.creativefabrica.com/wp-content/uploads/2020/03/09/Beach-logo-Graphics-3535417-1.jpg',
+        logoFallback: 'https://placehold.co/200x80/0a0a1a/00f0ff?text=PD+Leisure',
+        logoBg: 'bg-gray-800/50',
+        segments: [
+            { text: "I independently " },
+            { text: "designed and developed", className: "text-indigo-400 font-semibold" },
+            { text: " this entire website for " },
+            { text: "PD Leisure", className: "text-cyber-cyan font-bold" },
+            { text: ". It holds special significance as the " },
+            { text: "very first website", className: "text-pink-400 font-semibold" },
+            { text: " I ever built." }
+        ],
+        link: 'https://pdleisure.my',
+        linkText: 'Visit Website',
+        tags: ['Web Development', 'Family Project'],
+    }
 ]
 
 const AnimatedText = ({ segments }) => (
@@ -144,7 +274,7 @@ const AnimatedText = ({ segments }) => (
                 if (/\s+/.test(part)) {
                     return <span key={`${i}-${j}`}>{part}</span>;
                 }
-                
+
                 const spanContent = (
                     <motion.span
                         variants={{
