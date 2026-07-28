@@ -1,5 +1,5 @@
 import { useRef, useMemo, useCallback, useEffect } from 'react'
-import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
 /* ═══════════════════════════════════════════
@@ -80,12 +80,83 @@ function TwinklingStars() {
    MOON
    Large textured moon with surface displacement
    ═══════════════════════════════════════════ */
+function seededRandom(seed) {
+    let state = seed >>> 0
+    return () => {
+        state = (state * 1664525 + 1013904223) >>> 0
+        return state / 4294967296
+    }
+}
+
+function createMoonTexture({ bump = false } = {}) {
+    const size = 512
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+
+    const ctx = canvas.getContext('2d')
+    const random = seededRandom(bump ? 2718 : 3141)
+    const baseGradient = ctx.createRadialGradient(size * 0.38, size * 0.32, 20, size / 2, size / 2, size * 0.62)
+
+    if (bump) {
+        baseGradient.addColorStop(0, '#d8d8d8')
+        baseGradient.addColorStop(0.55, '#9c9c9c')
+        baseGradient.addColorStop(1, '#4c4c4c')
+    } else {
+        baseGradient.addColorStop(0, '#f7f3df')
+        baseGradient.addColorStop(0.45, '#c9c4b1')
+        baseGradient.addColorStop(0.78, '#8d887d')
+        baseGradient.addColorStop(1, '#56515a')
+    }
+
+    ctx.fillStyle = baseGradient
+    ctx.fillRect(0, 0, size, size)
+
+    const craterCount = bump ? 160 : 95
+    for (let i = 0; i < craterCount; i++) {
+        const x = random() * size
+        const y = random() * size
+        const radius = 4 + random() * (bump ? 30 : 24)
+        const crater = ctx.createRadialGradient(x, y, radius * 0.15, x, y, radius)
+
+        if (bump) {
+            crater.addColorStop(0, 'rgba(50, 50, 50, 0.7)')
+            crater.addColorStop(0.45, 'rgba(130, 130, 130, 0.45)')
+            crater.addColorStop(1, 'rgba(255, 255, 255, 0)')
+        } else {
+            crater.addColorStop(0, 'rgba(35, 34, 36, 0.32)')
+            crater.addColorStop(0.45, 'rgba(210, 205, 190, 0.1)')
+            crater.addColorStop(1, 'rgba(255, 255, 255, 0)')
+        }
+
+        ctx.fillStyle = crater
+        ctx.beginPath()
+        ctx.arc(x, y, radius, 0, Math.PI * 2)
+        ctx.fill()
+    }
+
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.colorSpace = bump ? THREE.NoColorSpace : THREE.SRGBColorSpace
+    texture.needsUpdate = true
+    return texture
+}
+
 function Moon() {
     const meshRef = useRef()
-    const [moonTexture, displacementTexture] = useLoader(THREE.TextureLoader, [
-        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/17271/lroc_color_poles_1k.jpg',
-        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/17271/ldem_3_8bit.jpg',
-    ])
+    const { moonTexture, bumpTexture } = useMemo(
+        () => ({
+            moonTexture: createMoonTexture(),
+            bumpTexture: createMoonTexture({ bump: true }),
+        }),
+        []
+    )
+
+    useEffect(() => {
+        return () => {
+            moonTexture.dispose()
+            bumpTexture.dispose()
+        }
+    }, [moonTexture, bumpTexture])
 
     useFrame(() => {
         meshRef.current.rotation.y += 0.0004
@@ -97,8 +168,8 @@ function Moon() {
             <sphereGeometry args={[8, 64, 64]} />
             <meshPhongMaterial
                 map={moonTexture}
-                displacementMap={displacementTexture}
-                displacementScale={0.1}
+                bumpMap={bumpTexture}
+                bumpScale={0.35}
                 color="#ffffff"
                 shininess={5}
             />
