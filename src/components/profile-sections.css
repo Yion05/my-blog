@@ -1,0 +1,80 @@
+.profile-eyebrow { font-family: Rajdhani, sans-serif; font-size: .75rem; letter-spacing: .2em; font-weight: 600; margin-bottom: .8rem; }
+/* Lightweight cards: no animated blur or continuous effects. */
+.expertise-section { margin: 48px 0; }
+.expertise-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.expertise-card { position: relative; overflow: hidden; padding: 28px; border: 1px solid #ffffff16; border-radius: 16px; background: linear-gradient(135deg, #111524f5, #080a15f5); transition: border-color .2s; }
+.expertise-card:hover { border-color: var(--expertise-accent); }
+.expertise-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.expertise-icon { display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid #ffffff12; border-radius: 14px; background: #ffffff04; color: var(--expertise-accent); font-size: 24px; }
+.expertise-number { font-family: Orbitron, sans-serif; font-size: 28px; color: #ffffff12; }
+.expertise-category { font-family: Rajdhani, sans-serif; font-weight: 600; font-size: .7rem; letter-spacing: .18em; color: var(--expertise-accent); margin-bottom: 9px; }
+.expertise-title { font-size: clamp(1rem, 2vw, 1.25rem); color: #f0f1f8; line-height: 1.5; }
+.expertise-card-bottom { display: flex; align-items: center; gap: 20px; margin-top: 24px; }
+.expertise-card-bottom > span:first-child { font: 500 .9rem Rajdhani, sans-serif; color: #bac0d1; white-space: nowrap; }
+.expertise-line { height: 1px; flex: 1; background: linear-gradient(90deg, var(--expertise-accent), transparent); opacity: .4; }
+.credential-filters { display: flex; gap: 8px; margin: 28px 0 36px; flex-wrap: wrap; }
+.credential-filters button { border: 1px solid #ffffff20; background: #0b0d18; border-radius: 6px; padding: 10px 22px; color: #a1a1b5; font: 600 1rem Rajdhani, sans-serif; cursor: pointer; transition: color .2s, border-color .2s; }
+.credential-filters button[aria-pressed=true] { color: #00f0ff; border-color: #00f0ff70; background: #00f0ff10; }
+.credential-filters button:hover { color: #fff; border-color: #ffffff70; }
+.credential-page a:focus-visible, .credential-filters button:focus-visible { outline: 2px solid #00f0ff; outline-offset: 5px; }
+.credential-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+.credential-category { --accent: #00f0ff; min-width: 0; }
+.credential-category--award { --accent: #e6ff00; }
+.credential-category-heading { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.credential-category-heading h4 { color: var(--accent); }
+.credential-category-heading p { font-size: .95rem; margin-top: 5px; }
+.credential-symbol { color: var(--accent); font-size: 22px; width: 44px; flex-shrink: 0; text-align: center; }
+.credential-card { border: 1px solid #ffffff18; border-radius: 16px; overflow: hidden; background: #090b17f2; margin-bottom: 20px; }
+.credential-preview { min-height: 250px; display: grid; place-items: center; position: relative; background: radial-gradient(ellipse at center, #17273880, transparent 75%); border-bottom: 1px solid #ffffff0d; }
+.credential-paper { width: 58%; aspect-ratio: 1.42; border: 1px solid #ffffff25; outline: 1px solid #ffffff0a; outline-offset: -9px; border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; transform: rotate(-5deg); background: #101726; }
+.credential-category--award .credential-paper { transform: rotate(5deg); }
+.credential-paper span { height: 3px; width: 45%; background: #ffffff15; }
+.credential-paper span:first-child { width: 25%; }
+.credential-paper i { font-size: 32px; color: var(--accent); opacity: .55; margin: 9px; }
+.credential-coming { position: absolute; bottom: 20px; font: 600 .65rem Orbitron, sans-serif; letter-spacing: .18em; color: #a1a1b5; }
+.credential-card-copy { padding: 25px; }
+.credential-image { width: 100%; height: 260px; object-fit: contain; background: #111421; padding: 16px; }
+.credential-verify { display: inline-block; color: var(--accent); font-family: Rajdhani, sans-serif; margin-top: 16px; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 640px) {
+    .expertise-grid, .credential-grid { grid-template-columns: 1fr; }
+    .credential-preview { min-height: 220px; }
+}
+
+.expertise-intro { font: 1.1rem Rajdhani, sans-serif; color: #aeb5ca; margin: -10px 0 24px; }
+.expertise-card { width: 100%; text-align: left; cursor: pointer; transition: border-color .2s, transform .2s, background .2s; }
+.expertise-card:hover { transform: translateY(-4px); background: linear-gradient(135deg, #1a2033, #0b0e1b); }
+.expertise-card:active { transform: translateY(-1px); }
+.expertise-card:focus-visible { outline: 2px solid var(--expertise-accent); outline-offset: 4px; }
+.expertise-category, .expertise-title { display: block; }
+.expertise-card-bottom { justify-content: space-between; border-top: 1px solid #ffffff10; padding-top: 18px; }
+.expertise-cta { display: inline-flex; align-items: center; gap: 12px; font: 600 .95rem Rajdhani, sans-serif; color: var(--expertise-accent); }
+.expertise-cta > span { border: 1px solid #ffffff25; border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; font-size: 18px; }
+.skill-gallery { margin: auto; padding: 0; width: min(900px, calc(100% - 32px)); max-height: calc(100dvh - 40px); border: 1px solid #ffffff25; border-radius: 20px; background: #0b0e19; color: #edf1fa; overflow: auto; box-shadow: 0 30px 100px #000b; }
+.skill-gallery::backdrop { background: #02040ce8; }
+.skill-gallery-inner { width: 100%; }
+.skill-gallery-header { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 24px 28px; border-bottom: 1px solid #ffffff12; }
+.skill-gallery-header h2 { font-size: clamp(1.1rem, 3vw, 1.6rem); }
+.gallery-close, .gallery-navigation button { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border: 1px solid #ffffff25; border-radius: 10px; background: #ffffff05; color: #fff; cursor: pointer; font-size: 26px; }
+.skill-gallery button:hover { background: #ffffff10; }
+.skill-gallery button:focus-visible { outline: 2px solid var(--expertise-accent); outline-offset: 3px; }
+.skill-gallery-stage { background: #050710; min-height: 280px; display: grid; place-items: center; }
+.skill-gallery-stage > img, .skill-gallery-stage > video { width: 100%; max-height: 55dvh; object-fit: contain; }
+.skill-gallery-empty { padding: 42px 24px; text-align: center; }
+.gallery-empty-art { position: relative; display: grid; place-items: center; margin: 0 auto 26px; width: 100px; height: 90px; border: 1px solid #ffffff20; border-radius: 18px; background: linear-gradient(140deg,#20253b,#101421); color: var(--expertise-accent); font-size: 34px; transform: rotate(-6deg); }
+.gallery-play { position: absolute; bottom: -8px; right: -10px; border: 1px solid #ffffff30; border-radius: 50%; background: #171c2d; width: 34px; height: 34px; display: grid; place-items: center; font-size: 11px; }
+.gallery-status { display: block; font: 600 .7rem Rajdhani, sans-serif; letter-spacing: .2em; color: var(--expertise-accent); margin-bottom: 12px; }
+.skill-gallery-empty h3 { font-size: 1.1rem; margin-bottom: 12px; }
+.skill-gallery-empty p { font: 1rem Rajdhani, sans-serif; color: #aab1c7; max-width: 320px; margin: auto; }
+.skill-gallery-footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 28px; border-top: 1px solid #ffffff12; }
+.gallery-caption { font: 600 1.1rem Rajdhani, sans-serif; }
+.gallery-description { font: .95rem Rajdhani, sans-serif; color: #9ea8c0; margin-top: 4px; }
+.gallery-navigation { display: flex; align-items: center; gap: 12px; font: .9rem Rajdhani, sans-serif; white-space: nowrap; }
+.gallery-picker { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 28px 24px; }
+.gallery-picker button { border: 1px solid #ffffff20; border-radius: 8px; padding: 10px 14px; color: #c8cfe0; font: .95rem Rajdhani, sans-serif; cursor: pointer; }
+.gallery-picker button[aria-pressed=true] { color: var(--expertise-accent); border-color: var(--expertise-accent); }
+@media (max-width: 640px) { .skill-gallery-header, .skill-gallery-footer { padding: 20px; } .skill-gallery-footer { flex-wrap: wrap; } .skill-gallery-empty { padding: 36px 20px; } }
+@media (prefers-reduced-motion: reduce) { .expertise-card { transition: none; } .expertise-card:hover { transform: none; } }
+
+.skill-gallery-header { position: sticky; top: 0; z-index: 2; background: #0b0e19; }
+.expertise-model-preview { position: absolute; right: 24px; top: 25px; width: 43%; height: 185px; pointer-events: none; }
+@media (max-width: 640px) { .expertise-model-preview { right: 12px; top: 40px; width: 40%; height: 155px; } }

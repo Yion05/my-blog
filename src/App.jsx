@@ -121,7 +121,7 @@ export default function App() {
                                 animate="animate"
                             >
                                 <ActivePageComponent
-                                    onNext={activePage !== 'portfolio' ? handleNext : undefined}
+                                    onNext={nextPageMap[activePage] ? handleNext : undefined}
                                 />
                             </motion.div>
                         </main>

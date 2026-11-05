@@ -30,7 +30,9 @@ const CinematicBackground = forwardRef(function CinematicBackground({ phase }, r
         },
     }), [])
 
-    const showLive = phase === 'landing' || phase === 'diving'
+    // The dive uses a captured frame, so release the WebGL scene as soon as
+    // playback starts instead of keeping its GPU resources during the zoom.
+    const showLive = phase === 'landing'
     return (
         <>
             <div className="cinema-background" aria-hidden="true">

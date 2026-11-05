@@ -1,4 +1,10 @@
+import { useState } from 'react'
+import SkillModelPreview from './SkillModelPreview'
+import SkillGallery from './SkillGallery'
+import { skillShowcases } from '../data/skillShowcases'
 import { motion } from 'framer-motion'
+import './profile-sections.css'
+import Credentials from './Credentials'
 
 const fadeUp = {
     hidden: { opacity: 0, y: 40, scale: 0.96 },
@@ -31,6 +37,7 @@ const bioSegments = [
 ];
 
 export default function About({ onNext }) {
+    const [selectedSkill, setSelectedSkill] = useState(null)
     return (
         <motion.div
             initial="hidden"
@@ -115,38 +122,30 @@ export default function About({ onNext }) {
                 </div>
             </motion.div>
 
-            {/* Details Section */}
-            <motion.div variants={fadeUp} custom={2} className="mb-8">
-                <h3 className="font-orbitron text-2xl font-bold text-cyber-purple mb-4">
-                    {'// '}Details
-                </h3>
-                <div className="glass-card p-6 space-y-5 neon-border-purple animate-border-shimmer">
-                    {[
-                        { icon: 'fa-graduation-cap', text: 'Multimedia University', color: 'text-neon-yellow' },
-                        { icon: 'fa-location-dot', text: 'Lives in Malaysia', color: 'text-neon-yellow' },
-                        { icon: 'fa-user', text: 'Male', color: 'text-neon-yellow' },
-                    ].map((item, i) => (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1, duration: 0.5 }}
-                            viewport={{ once: true }}
-                            className="flex items-center gap-4"
-                        >
-                            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center flex-shrink-0">
-                                <i className={`fas ${item.icon} text-cyber-purple`} />
+            <motion.section variants={fadeUp} custom={2} className="expertise-section" aria-labelledby="expertise-title">
+                <h3 id="expertise-title" className="font-orbitron text-2xl md:text-3xl font-bold text-cyber-cyan mb-6">Technical & Creative Skills</h3>
+                <p className="expertise-intro">Explore each skill to see photos and videos of my work.</p>
+                <div className="expertise-grid">
+                    {skillShowcases.map((skill, index) => (
+                        <button type="button" className="expertise-card" key={skill.title} onClick={() => setSelectedSkill(skill)} aria-haspopup="dialog" aria-label={`View ${skill.title} work`} style={{ '--expertise-accent': skill.accent }}>
+                            <div className="expertise-card-top">
+                                <div className="expertise-icon"><i className={`fas ${skill.icon}`} aria-hidden="true" /></div>
+                                <span className="expertise-number" aria-hidden="true">0{index + 1}</span>
                             </div>
-                            <p className={`font-rajdhani text-xl ${item.color}`}>{item.text}</p>
-                        </motion.div>
+                            <span className="expertise-category">{skill.category}</span>
+                            <span className="expertise-title font-orbitron font-bold">{skill.title}</span>
+                            {skill.id === 'modeling' && <SkillModelPreview paused={Boolean(selectedSkill)} />}
+                            <div className="expertise-card-bottom"><span>{skill.tag}</span><span className="expertise-cta">View work <span aria-hidden="true">↗</span></span></div>
+                        </button>
                     ))}
                 </div>
-            </motion.div>
+                {selectedSkill && <SkillGallery skill={selectedSkill} onClose={() => setSelectedSkill(null)} />}
+            </motion.section>
 
             {/* My Skills */}
             <motion.div variants={fadeUp} custom={3}>
                 <h3 className="font-orbitron text-2xl font-bold text-cyber-cyan mb-6 text-center">
-                    {'< '}My Skills{' />'}
+                    {'< '}Languages & Tools{' />'}
                 </h3>
                 <div className="skills-carousel">
                     <div className="skills-track">
@@ -206,6 +205,10 @@ export default function About({ onNext }) {
                     </div>
                 </div>
             </motion.div>
+
+            <div className="mt-16">
+                <Credentials />
+            </div>
 
             {/* Next Page Button */}
             <motion.div variants={fadeUp} custom={4} className="mt-10 text-center">

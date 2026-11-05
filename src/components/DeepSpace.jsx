@@ -62,11 +62,13 @@ export default function DeepSpace({ active = false, meteors = false }) {
             createStarSprite('238,244,255', true),
         ]
         const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+        const mobileQuery = window.matchMedia('(pointer: coarse), (max-width: 767px)')
         let width = 1
         let height = 1
         let pixelRatio = 1
         let elapsed = 0
         let lastTime = 0
+        let lastPaint = 0
         let frame = 0
         let disposed = false
         let resolutionQuery
@@ -119,7 +121,9 @@ export default function DeepSpace({ active = false, meteors = false }) {
             context.globalAlpha = 1
             context.fillStyle = '#000000'
             context.fillRect(0, 0, width, height)
-            const count = Math.min(stars.length, Math.max(180, Math.round(width * height / 1800)))
+            const count = mobileQuery.matches
+                ? Math.min(220, Math.max(100, Math.round(width * height / 2600)))
+                : Math.min(stars.length, Math.max(180, Math.round(width * height / 1800)))
             for (let i = 0; i < count; i++) {
                 const star = stars[i]
                 const padding = 18
@@ -139,13 +143,20 @@ export default function DeepSpace({ active = false, meteors = false }) {
             if (!shouldAnimate()) return
             if (lastTime) elapsed += Math.min((timestamp - lastTime) / 1000, 0.1)
             lastTime = timestamp
-            paint()
+            // Keep the decorative canvas from competing with scrolling and page
+            // animations, especially on 90/120 Hz phone displays.
+            const interval = 1000 / (mobileQuery.matches ? 30 : 60)
+            if (!lastPaint || timestamp - lastPaint >= interval - 0.5) {
+                paint()
+                lastPaint = timestamp - ((timestamp - lastPaint) % interval)
+            }
             frame = requestAnimationFrame(tick)
         }
         const reconcile = () => {
             cancelAnimationFrame(frame)
             frame = 0
             lastTime = 0
+            lastPaint = 0
             if (disposed) return
             paint()
             if (shouldAnimate()) frame = requestAnimationFrame(tick)
@@ -155,9 +166,12 @@ export default function DeepSpace({ active = false, meteors = false }) {
             const bounds = canvas.getBoundingClientRect()
             width = Math.max(1, bounds.width || window.innerWidth)
             height = Math.max(1, bounds.height || window.innerHeight)
-            pixelRatio = Math.min(2, Math.max(1, window.devicePixelRatio || 1))
-            canvas.width = Math.round(width * pixelRatio)
-            canvas.height = Math.round(height * pixelRatio)
+            pixelRatio = Math.min(mobileQuery.matches ? 1.25 : 2, Math.max(1, window.devicePixelRatio || 1))
+            const nextWidth = Math.round(width * pixelRatio)
+            const nextHeight = Math.round(height * pixelRatio)
+            if (canvas.width === nextWidth && canvas.height === nextHeight) return
+            canvas.width = nextWidth
+            canvas.height = nextHeight
             // Draw once even while inactive, so the arrival fade never reveals an empty frame.
             reconcile()
         }
@@ -173,6 +187,7 @@ export default function DeepSpace({ active = false, meteors = false }) {
         window.addEventListener('resize', resize, { passive: true })
         document.addEventListener('visibilitychange', reconcile)
         motionQuery.addEventListener('change', reconcile)
+        mobileQuery.addEventListener('change', resize)
         onResolutionChange()
 
         return () => {
@@ -182,8 +197,10 @@ export default function DeepSpace({ active = false, meteors = false }) {
             window.removeEventListener('resize', resize)
             document.removeEventListener('visibilitychange', reconcile)
             motionQuery.removeEventListener('change', reconcile)
+            mobileQuery.removeEventListener('change', resize)
             resolutionQuery?.removeEventListener('change', onResolutionChange)
             reconcileRef.current = null
+            canvas.width = canvas.height = 1
         }
     }, [])
 
