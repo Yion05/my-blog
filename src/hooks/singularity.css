@@ -1,0 +1,31 @@
+/* Perspective belongs to the stage; GSAP transforms only the outer carriers. */
+.singularity-stage {
+  perspective: 1000px;
+  perspective-origin: var(--singularity-origin, 50% 50%);
+  isolation: isolate;
+  overflow: clip;
+}
+.singularity-carrier {
+  position: relative;
+  display: flow-root;
+  flex-shrink: 0;
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+.singularity-stage.singularity-active {
+  pointer-events: none;
+  user-select: none;
+}
+.singularity-active > .singularity-carrier {
+  will-change: transform, opacity;
+}
+.singularity-particle { position: absolute; }
+.singularity-hint {
+  position: absolute;
+  bottom: 2.5rem;
+}
+/* Original child color/entrance/hover animations remain untouched. */
+@media (prefers-reduced-motion: reduce) {
+  .singularity-stage { perspective: none; }
+  .singularity-active > .singularity-carrier { will-change: opacity; }
+}

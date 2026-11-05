@@ -494,3 +494,75 @@ body {
     gap: 1.25rem;
   }
 }
+/* Space background only; original content styles above are unchanged. */
+.space-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: #020204;
+  transition: opacity 0.8s ease;
+}
+.space-background--quiet { opacity: 0.32; }
+.space-fallback, .space-vignette { position: absolute; inset: 0; }
+.space-fallback {
+  background: radial-gradient(ellipse at 50% 50%, #45201530, transparent 55%), #020204;
+}
+.space-fallback__ring {
+  position: absolute;
+  width: min(65vh, 80vw);
+  height: min(65vh, 80vw);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #010103 30%, #ffbd7eaa 31%, #bf4d2733 34%, transparent 48%);
+}
+.space-background--ready .space-fallback__ring { display: none; }
+.space-vignette {
+  background: radial-gradient(ellipse at 50% 50%, transparent 35%, #00000038 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .space-background { transition: none; }
+}
+
+/* Contrast layers keep the original neon fills and motion intact. */
+.landing-title-depth {
+  -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.9);
+  paint-order: stroke fill;
+  filter: drop-shadow(0 1px 0 #11101b)
+    drop-shadow(0 3px 0 #090910)
+    drop-shadow(0 3px 0 #030305)
+    drop-shadow(0 10px 12px rgba(0, 0, 0, 0.95));
+}
+.landing-welcome {
+  position: relative;
+  color: #f3f4fa;
+  font-weight: 600;
+  text-shadow: 0 1px 2px #000, 0 0 8px #000;
+}
+.landing-welcome::before {
+  content: '';
+  position: absolute;
+  inset: -10px -18px;
+  border-radius: 12px;
+  background: rgba(2, 3, 9, 0.78);
+  box-shadow: 0 0 22px 9px rgba(2, 3, 9, 0.55);
+  z-index: -1;
+  pointer-events: none;
+}
+.landing-enter {
+  background: rgba(1, 4, 10, 0.88);
+  text-shadow: 0 1px 2px #000, 0 0 8px #000;
+}
+.landing-enter:hover { background: rgba(2, 15, 22, 0.95); }
+.landing-hint {
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.9);
+  text-shadow: 0 1px 2px #000;
+}
+@media (max-width: 480px) {
+  .landing-title-depth { -webkit-text-stroke-width: 0.6px; }
+  .landing-welcome::before { inset: -9px -5px; }
+}

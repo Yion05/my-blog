@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
-import ThreeBackground from './components/ThreeBackground'
+import CinematicBackground from './components/CinematicBackground'
 import Navigation from './components/Navigation'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -32,6 +32,9 @@ export default function App() {
     const [activePage, setActivePage] = useState('about')
     const [transitioning, setTransitioning] = useState(false)
     const audioRef = useRef(null)
+    const cinemaRef = useRef(null)
+    const [entryPhase, setEntryPhase] = useState('landing')
+    const [sceneVersion, setSceneVersion] = useState(0)
 
     const handleStart = () => {
         if (audioRef.current) {
@@ -40,12 +43,16 @@ export default function App() {
                 console.warn('Audio autoplay blocked:', err)
             })
         }
-        setTransitioning(true)
-        setTimeout(() => {
-            setShowLanding(false)
-            setActivePage('about')
-            setTransitioning(false)
-        }, 400)
+    }
+
+    const handleEntryComplete = () => {
+        // NAVIGATE HERE: GSAP calls this AFTER pull, dive, blackout, and star reveal.
+        // Replace these setters with window.location.href = '/your-page'
+        // or router.push('/your-page') when using a router.
+        setShowLanding(false)
+        setEntryPhase('arrived')
+        setActivePage('about')
+        setTransitioning(false)
     }
 
     const handleNavigate = (pageId) => {
@@ -57,6 +64,8 @@ export default function App() {
         setTransitioning(true)
         setTimeout(() => {
             setActivePage('about')
+            setEntryPhase('landing')
+            setSceneVersion(version => version + 1) // Fresh scenery and refs for replay.
             setShowLanding(true)
             setTransitioning(false)
         }, 400)
@@ -76,14 +85,14 @@ export default function App() {
     const ActivePageComponent = pages[activePage]
 
     return (
-        <div className="min-h-screen scanline-overlay">
+        <div className={`min-h-screen scanline-overlay ${entryPhase === 'arrived' ? 'cinema-arrived' : entryPhase !== 'landing' ? 'cinema-traveling' : ''}`}>
             {/* Background Music */}
             <audio ref={audioRef} loop preload="auto">
                 <source src="song/yujian.mp3" type="audio/mpeg" />
             </audio>
 
             {/* Three.js Background */}
-            <ThreeBackground />
+            <CinematicBackground key={sceneVersion} ref={cinemaRef} phase={entryPhase} />
 
             {/* Content layer */}
             <div
@@ -94,7 +103,8 @@ export default function App() {
                 }}
             >
                 {showLanding ? (
-                    <Hero onStart={handleStart} />
+                    <Hero onStart={handleStart} onEntryComplete={handleEntryComplete}
+                        cinemaRef={cinemaRef} onPhase={setEntryPhase} />
                 ) : (
                     <div>
                         <Navigation

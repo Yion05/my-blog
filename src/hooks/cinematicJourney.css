@@ -1,0 +1,34 @@
+/* The clip lives outside the scaled canvas, so no giant scrollable surface forms. */
+.cinema-background {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  background: #000;
+}
+.cinema-live, .cinema-stars, .cinema-dive {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.cinema-stars, .cinema-dive { opacity: 0; visibility: hidden; }
+.cinema-dive {
+  display: block;
+  transform-origin: center center;
+  /* Backing resolution stays fixed while GSAP scales the compositor texture. */
+  backface-visibility: hidden;
+}
+.deep-space-canvas { display: block; width: 100%; height: 100%; background: #000; }
+.cinema-blackout {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  background: #000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+/* Keep the original scanline on the landing screen; arrival is stars only. */
+.cinema-traveling.scanline-overlay::after, .cinema-arrived.scanline-overlay::after { display: none; }
