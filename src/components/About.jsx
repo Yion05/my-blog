@@ -5,6 +5,7 @@ import { skillShowcases } from '../data/skillShowcases'
 import { motion, useReducedMotion } from 'framer-motion'
 import './profile-sections.css'
 import Credentials from './Credentials'
+import ProfileDepth from './ProfileDepth'
 
 const fadeUp = {
     hidden: { opacity: 0, y: 24 },
@@ -58,19 +59,21 @@ export default function About({ onNext }) {
             {/* Profile Card */}
             <motion.div
                 {...reveal}
-                whileHover={reducedMotion ? undefined : { y: -6, transition: { duration: 0.3 } }}
-                className="glass-card p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 mb-8 tilt-card"
+                className="mb-8"
             >
+                <ProfileDepth>
+                <div className="profile-depth-photo flex-shrink-0">
                 <img
                     src="pictures/aboutme.jpeg"
                     alt="Khoo Jun Yong"
-                    className="h-56 w-40 object-cover rounded-xl border border-cyber-cyan/20 flex-shrink-0 transition-transform duration-500 hover:scale-110 img-reveal"
+                    className="h-56 w-40 object-cover rounded-xl border border-cyber-cyan/20 img-reveal"
                     onError={(e) => {
                         e.target.onerror = null
                         e.target.src = 'https://placehold.co/160x224/0a0a1a/00f0ff?text=Photo'
                     }}
                 />
-                <div className="flex-1 text-center md:text-left">
+                </div>
+                <div className="profile-depth-copy flex-1 text-center md:text-left">
                     <h3 className="font-orbitron text-2xl font-bold text-neon-yellow mb-1 glitch-text">
                         Khoo Jun Yong
                     </h3>
@@ -109,8 +112,8 @@ export default function About({ onNext }) {
                                     <motion.span
                                         key={`${i}-${j}`}
                                         variants={{
-                                            hidden: { opacity: 0, filter: 'blur(4px)', y: 4 },
-                                            visible: { opacity: 1, filter: 'blur(0px)', y: 0, transition: { duration: 0.3 } }
+                                            hidden: { opacity: 0, y: 4 },
+                                            visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
                                         }}
                                         className={`inline-block ${seg.className || ''}`}
                                     >
@@ -121,6 +124,7 @@ export default function About({ onNext }) {
                         })}
                     </motion.p>
                 </div>
+                </ProfileDepth>
             </motion.div>
 
             <section className="expertise-section" aria-labelledby="expertise-title">
@@ -128,6 +132,7 @@ export default function About({ onNext }) {
                 <div className="expertise-grid">
                     {skillShowcases.map((skill, index) => (
                         <motion.div {...reveal} custom={index} key={skill.id} className="expertise-card-reveal">
+                        <ProfileDepth variant="card">
                         <button type="button" className="expertise-card" onClick={() => setSelectedSkill(skill)} aria-haspopup="dialog" aria-label={`View ${skill.title} work`} style={{ '--expertise-accent': skill.accent }}>
                             <div className="expertise-card-top">
                                 <div className="expertise-icon"><i className={`fas ${skill.icon}`} aria-hidden="true" /></div>
@@ -138,6 +143,7 @@ export default function About({ onNext }) {
                             {skill.preview && <img className="expertise-game-preview" src={skill.preview} alt="Wildwood at sunset" loading="lazy" decoding="async" />}
                             <div className="expertise-card-bottom"><span>{skill.tag}</span><span className="expertise-cta">View work <span aria-hidden="true">↗</span></span></div>
                         </button>
+                        </ProfileDepth>
                         </motion.div>
                     ))}
                 </div>

@@ -20,7 +20,7 @@ export default function useSingularityTransition(stageRef, { onBegin, onComplete
         setIsEntering(true)
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         const savedOrigin = stage.style.getPropertyValue('--singularity-origin')
-        const camera = { zoom: 1, bank: 0, flow: 0, lens: 0, rush: 0 }
+        const camera = { zoom: 1, bank: 0, flow: 0, lens: 0, rush: 0, time: 0 }
         const entries = [...stage.querySelectorAll('[data-singularity]')].map((element, index) => ({
             element, index, originalStyle: element.getAttribute('style'), dx: 0, dy: 0,
             state: { capture: 0, orbit: 0, infall: 0, scale: 1, stretch: 1, opacity: 1 },

@@ -144,7 +144,13 @@ function CaptureBridge({ captureRef }) {
     const { gl, scene, camera } = useThree()
     useEffect(() => {
         if (!captureRef) return
+        let animated = [], lastFrame = 0, frameCost = 0, samples = 0
         captureRef.current = destination => {
+            animated = []
+            scene.traverse(object => {
+                const uniforms = object.material?.uniforms
+                if (uniforms?.uTime) animated.push({ object, uniforms, time: uniforms.uTime.value, rotation: object.rotation.z })
+            })
             const context = destination.getContext('2d', { alpha: false })
             if (!context) return false
             gl.render(scene, camera)
@@ -155,6 +161,39 @@ function CaptureBridge({ captureRef }) {
             context.drawImage(gl.domElement, 0, 0)
             return true
         }
+        // GSAP is the only frame driver during the dive (Canvas switches to
+        // demand mode). Keep the same scene and clock for a seamless handoff.
+        captureRef.current.update = state => {
+            if (document.hidden) return
+            for (const { object, uniforms, time, rotation } of animated) {
+                uniforms.uTime.value = time + state.time + state.flow * 2.4
+                if (uniforms.uZoom) {
+                    uniforms.uZoom.value = state.zoom
+                    uniforms.uBank.value = state.bank
+                    uniforms.uDive.value = Math.min(1, state.time / 1.8)
+                } else if (object.isPoints) {
+                    object.scale.setScalar(Math.min(6, state.zoom))
+                    object.rotation.z = rotation - state.bank
+                    uniforms.uPixelRatio.value = gl.getPixelRatio()
+                }
+            }
+            // A bounded pixel budget avoids a giant texture as the camera dives.
+            // Reduce oversampling only when sustained frame time is too high.
+            const now = performance.now()
+            if (lastFrame && now - lastFrame < 150) {
+                frameCost += now - lastFrame
+                samples++
+                if (samples === 18) {
+                    if (frameCost / samples > 34) {
+                        const floor = Math.min(gl.getPixelRatio(), window.innerWidth < 768 ? .8 : 1)
+                        gl.setPixelRatio(Math.max(floor, gl.getPixelRatio() * .85))
+                    }
+                    samples = 0; frameCost = 0
+                }
+            }
+            lastFrame = now
+            gl.render(scene, camera)
+        }
         return () => { captureRef.current = null }
     }, [gl, scene, camera, captureRef])
     return null
@@ -164,10 +203,16 @@ export default function ThreeBackground({ landing = true, paused = false, captur
     const reducedMotion = useReducedMotion()
     const [sceneReady, setSceneReady] = useState(false)
     const [visible, setVisible] = useState(!document.hidden)
+    const [pixelRatio, setPixelRatio] = useState(() => renderPixelRatio())
     useEffect(() => {
         const update = () => setVisible(!document.hidden)
+        const resize = () => setPixelRatio(renderPixelRatio())
         document.addEventListener('visibilitychange', update)
-        return () => document.removeEventListener('visibilitychange', update)
+        window.addEventListener('resize', resize, { passive: true })
+        return () => {
+            document.removeEventListener('visibilitychange', update)
+            window.removeEventListener('resize', resize)
+        }
     }, [])
     return (
         <div className={`space-background ${landing ? '' : 'space-background--quiet'} ${sceneReady ? 'space-background--ready' : ''}`} aria-hidden="true">
@@ -175,7 +220,7 @@ export default function ThreeBackground({ landing = true, paused = false, captur
             <SceneBoundary>
                 <Canvas camera={{ position: [0, 0, 24], fov: 50, near: 0.1, far: 180 }}
                     onCreated={() => setSceneReady(true)}
-                    dpr={[1, 2]} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+                    dpr={pixelRatio} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
                     frameloop={visible && !reducedMotion && !paused ? 'always' : 'demand'} fallback={null}
                     events={() => ({ enabled: false, priority: 0 })}>
                     <ambientLight intensity={0.35} color="#7186c0" />
@@ -192,4 +237,11 @@ export default function ThreeBackground({ landing = true, paused = false, captur
             <div className="space-vignette" />
         </div>
     )
+}
+
+function renderPixelRatio() {
+    const width = window.innerWidth, height = window.innerHeight
+    const mobile = width < 768
+    const budget = mobile ? 1400000 : 3840 * 2160
+    return Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 2, Math.sqrt(budget / (width * height)))
 }

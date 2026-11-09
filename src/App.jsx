@@ -10,12 +10,10 @@ import Portfolio from './components/Portfolio'
 import Footer from './components/Footer'
 
 const pageVariants = {
-    initial: { opacity: 0, y: 40, scale: 0.96, rotateX: 4 },
+    initial: { opacity: 0, y: 40 },
     animate: {
         opacity: 1,
         y: 0,
-        scale: 1,
-        rotateX: 0,
         transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
     },
 }

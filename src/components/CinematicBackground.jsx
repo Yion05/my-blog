@@ -17,7 +17,7 @@ const CinematicBackground = forwardRef(function CinematicBackground({ phase }, r
         blackout: blackout.current,
         capture() {
             try {
-                if (captureFrame.current?.(dive.current)) return
+                if (captureFrame.current?.(dive.current)) return true
             } catch { /* WebGL unavailable: the black transition still completes. */ }
             const canvas = dive.current
             canvas.width = Math.round(window.innerWidth)
@@ -27,12 +27,14 @@ const CinematicBackground = forwardRef(function CinematicBackground({ phase }, r
                 context.fillStyle = '#000'
                 context.fillRect(0, 0, canvas.width, canvas.height)
             }
+            return false
         },
+        render(state) { captureFrame.current?.update(state) },
     }), [])
 
-    // The dive uses a captured frame, so release the WebGL scene as soon as
-    // playback starts instead of keeping its GPU resources during the zoom.
-    const showLive = phase === 'landing'
+    // Keep the procedural disk alive only through the dive. The blackout
+    // unmounts the entire landing renderer before any other page is shown.
+    const showLive = phase === 'landing' || phase === 'diving'
     return (
         <>
             <div className="cinema-background" aria-hidden="true">

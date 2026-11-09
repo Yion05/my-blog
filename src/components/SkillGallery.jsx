@@ -4,9 +4,32 @@ const ModelTurntable = lazy(() => import('./ModelTurntable'))
 
 export default function SkillGallery({ skill, onClose }) {
     const dialogRef = useRef(null)
+    const videoRef = useRef(null)
     const [index, setIndex] = useState(0)
     const [failed, setFailed] = useState(false)
     const item = skill.media[index]
+    useEffect(() => {
+        const video = videoRef.current
+        if (!video) return
+        // Muted inline playback works with mobile autoplay policies; controls remain available.
+        let resumePlayback = false
+        const play = () => { video.play().catch(() => { /* Keep native Play available if autoplay is blocked. */ }) }
+        const onVisibility = () => {
+            if (document.hidden) {
+                resumePlayback = !video.paused
+                video.pause()
+            } else if (resumePlayback) {
+                resumePlayback = false
+                play()
+            }
+        }
+        if (!document.hidden) play()
+        document.addEventListener('visibilitychange', onVisibility)
+        return () => {
+            document.removeEventListener('visibilitychange', onVisibility)
+            video.pause()
+        }
+    }, [item?.src])
     useEffect(() => {
         const dialog = dialogRef.current
         const opener = document.activeElement
@@ -34,11 +57,11 @@ export default function SkillGallery({ skill, onClose }) {
                         <h2 id="skill-gallery-title" className="font-orbitron font-bold">{skill.title}</h2></div>
                     <button className="gallery-close" type="button" onClick={onClose} aria-label="Close gallery" autoFocus>×</button>
                 </header>
-                <div className="skill-gallery-stage">
+                <div key={item?.id || 'empty'} className="skill-gallery-stage">
                     {item && !failed ? item.type === 'model'
                         ? <Suspense fallback={<p className="gallery-description">Loading viewer…</p>}><ModelTurntable key={item.src} src={item.src} /></Suspense>
                         : item.type === 'video'
-                        ? <video key={item.src} src={item.src} poster={item.poster} controls playsInline preload="metadata" aria-label={item.title} onError={() => setFailed(true)} />
+                        ? <video ref={videoRef} key={item.src} src={item.src} poster={item.poster} autoPlay muted controls playsInline preload="metadata" aria-label={item.title} onError={() => setFailed(true)} />
                         : <img key={item.src} src={item.src} alt={item.alt || item.title} onError={() => setFailed(true)} />
                         : <div className="skill-gallery-empty" role="status">
                             <div className="gallery-empty-art" aria-hidden="true"><i className={`fas ${skill.icon}`} /><span className="gallery-play"><i className="fas fa-play" /></span></div>

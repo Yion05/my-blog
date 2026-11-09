@@ -18,6 +18,9 @@ const fragmentShader = `
     uniform vec2 uSize;
     uniform float uRadius;
     uniform float uTime;
+    uniform float uZoom;
+    uniform float uBank;
+    uniform float uDive;
 
     float hash(vec2 p) {
         vec3 q = fract(vec3(p.xyx) * 0.1031);
@@ -62,6 +65,9 @@ const fragmentShader = `
     }
     void main() {
         vec2 screen = (vUv - 0.5) * uSize;
+        // Re-trace the curved rays at the current camera magnification. Unlike
+        // enlarging a captured image, disk filaments retain pixel-level detail.
+        screen = mat2(cos(uBank), -sin(uBank), sin(uBank), cos(uBank)) * screen / uZoom;
         vec2 p = screen / uRadius;
         // A modest camera roll gives the disk depth while keeping the hole centered.
         p = mat2(0.989, -0.148, 0.148, 0.989) * p;
@@ -118,7 +124,7 @@ const fragmentShader = `
         float textWidth = uSize.x / uSize.y < 0.85 ? 0.65 : 0.27;
         vec2 textRegion = vec2(screen.x / (uSize.x * textWidth), (screen.y + uSize.y * 0.025) / (uSize.y * 0.23));
         float textShade = exp(-pow(abs(textRegion.x), 6.0) - pow(abs(textRegion.y), 6.0));
-        light *= 1.0 - textShade * 0.92;
+        light *= 1.0 - textShade * 0.92 * (1.0 - smoothstep(0.0, 0.85, uDive));
         vec3 color = vec3(1.0) - exp(-light * 1.35);
         float alpha = max(captured, clamp(max(max(light.r, light.g), light.b) * 2.0, 0.0, 1.0));
         if (alpha < 0.002) discard;
@@ -131,6 +137,9 @@ export default function BlackHole({ still }) {
     const material = useRef()
     const uniforms = useMemo(() => ({
         uTime: { value: 0 },
+        uZoom: { value: 1 },
+        uBank: { value: 0 },
+        uDive: { value: 0 },
         uSize: { value: new Vector2(1, 1) },
         uRadius: { value: 1 },
     }), [])
