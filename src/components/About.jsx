@@ -2,17 +2,16 @@ import { useState } from 'react'
 import SkillModelPreview from './SkillModelPreview'
 import SkillGallery from './SkillGallery'
 import { skillShowcases } from '../data/skillShowcases'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import './profile-sections.css'
 import Credentials from './Credentials'
 
 const fadeUp = {
-    hidden: { opacity: 0, y: 40, scale: 0.96 },
+    hidden: { opacity: 0, y: 24 },
     visible: (i = 0) => ({
         opacity: 1,
         y: 0,
-        scale: 1,
-        transition: { duration: 0.7, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] },
+        transition: { duration: 0.65, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] },
     }),
 }
 
@@ -38,16 +37,19 @@ const bioSegments = [
 
 export default function About({ onNext }) {
     const [selectedSkill, setSelectedSkill] = useState(null)
+    const reducedMotion = useReducedMotion()
+    // Reveal each section only when it enters the viewport, then stop observing it.
+    const reveal = {
+        variants: fadeUp,
+        initial: reducedMotion ? false : 'hidden',
+        whileInView: 'visible',
+        viewport: { once: true, amount: 0.12 },
+    }
     return (
-        <motion.div
-            initial="hidden"
-            animate="visible"
-            className="max-w-5xl mx-auto"
-        >
+        <div className="about-page max-w-5xl mx-auto">
             {/* Section Title */}
             <motion.h2
-                variants={fadeUp}
-                custom={0}
+                {...reveal}
                 className="font-orbitron text-4xl md:text-5xl font-bold mb-10 section-title gradient-text"
             >
                 About Me
@@ -55,9 +57,8 @@ export default function About({ onNext }) {
 
             {/* Profile Card */}
             <motion.div
-                variants={fadeUp}
-                custom={1}
-                whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                {...reveal}
+                whileHover={reducedMotion ? undefined : { y: -6, transition: { duration: 0.3 } }}
                 className="glass-card p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 mb-8 tilt-card"
             >
                 <img
@@ -90,10 +91,10 @@ export default function About({ onNext }) {
                             hidden: { opacity: 1 },
                             visible: {
                                 opacity: 1,
-                                transition: { staggerChildren: 0.03 }
+                                transition: { staggerChildren: reducedMotion ? 0 : 0.03 }
                             }
                         }}
-                        initial="hidden"
+                        initial={reducedMotion ? false : 'hidden'}
                         whileInView="visible"
                         viewport={{ once: true, margin: "-50px" }}
                     >
@@ -122,29 +123,30 @@ export default function About({ onNext }) {
                 </div>
             </motion.div>
 
-            <motion.section variants={fadeUp} custom={2} className="expertise-section" aria-labelledby="expertise-title">
-                <h3 id="expertise-title" className="font-orbitron text-2xl md:text-3xl font-bold text-cyber-cyan mb-6">Technical & Creative Skills</h3>
-                <p className="expertise-intro">Explore each skill to see photos and videos of my work.</p>
+            <section className="expertise-section" aria-labelledby="expertise-title">
+                <motion.h3 {...reveal} id="expertise-title" className="font-orbitron text-2xl md:text-3xl font-bold gradient-text mb-6">Technical & Creative Skills</motion.h3>
                 <div className="expertise-grid">
                     {skillShowcases.map((skill, index) => (
-                        <button type="button" className="expertise-card" key={skill.title} onClick={() => setSelectedSkill(skill)} aria-haspopup="dialog" aria-label={`View ${skill.title} work`} style={{ '--expertise-accent': skill.accent }}>
+                        <motion.div {...reveal} custom={index} key={skill.id} className="expertise-card-reveal">
+                        <button type="button" className="expertise-card" onClick={() => setSelectedSkill(skill)} aria-haspopup="dialog" aria-label={`View ${skill.title} work`} style={{ '--expertise-accent': skill.accent }}>
                             <div className="expertise-card-top">
                                 <div className="expertise-icon"><i className={`fas ${skill.icon}`} aria-hidden="true" /></div>
-                                <span className="expertise-number" aria-hidden="true">0{index + 1}</span>
                             </div>
                             <span className="expertise-category">{skill.category}</span>
                             <span className="expertise-title font-orbitron font-bold">{skill.title}</span>
                             {skill.id === 'modeling' && <SkillModelPreview paused={Boolean(selectedSkill)} />}
+                            {skill.preview && <img className="expertise-game-preview" src={skill.preview} alt="Wildwood at sunset" loading="lazy" decoding="async" />}
                             <div className="expertise-card-bottom"><span>{skill.tag}</span><span className="expertise-cta">View work <span aria-hidden="true">↗</span></span></div>
                         </button>
+                        </motion.div>
                     ))}
                 </div>
                 {selectedSkill && <SkillGallery skill={selectedSkill} onClose={() => setSelectedSkill(null)} />}
-            </motion.section>
+            </section>
 
             {/* My Skills */}
-            <motion.div variants={fadeUp} custom={3}>
-                <h3 className="font-orbitron text-2xl font-bold text-cyber-cyan mb-6 text-center">
+            <motion.div {...reveal}>
+                <h3 className="font-orbitron text-2xl font-bold gradient-text mb-6 text-center">
                     {'< '}Languages & Tools{' />'}
                 </h3>
                 <div className="skills-carousel">
@@ -206,12 +208,12 @@ export default function About({ onNext }) {
                 </div>
             </motion.div>
 
-            <div className="mt-16">
+            <motion.div {...reveal} className="mt-16">
                 <Credentials />
-            </div>
+            </motion.div>
 
             {/* Next Page Button */}
-            <motion.div variants={fadeUp} custom={4} className="mt-10 text-center">
+            <motion.div {...reveal} className="mt-10 text-center">
                 <motion.button
                     onClick={onNext}
                     className="cyber-btn"
@@ -221,6 +223,6 @@ export default function About({ onNext }) {
                     Next Page →
                 </motion.button>
             </motion.div>
-        </motion.div>
+        </div>
     )
 }

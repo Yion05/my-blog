@@ -42,7 +42,7 @@ function MiniModel({ active }) {
 }
 
 export function EeveeCardCanvas({ active }) {
-    return <Canvas frameloop={active ? 'always' : 'demand'} dpr={1} camera={{ position: [2, .8, 4.4], fov: 35 }}
+    return <Canvas frameloop={active ? 'always' : 'demand'} dpr={1} camera={{ position: [2, .8, 4.4], fov: 29 }}
         gl={{ alpha: true, antialias: true }} events={() => ({ enabled: false, priority: 0 })}>
         <ambientLight intensity={1.8} />
         <directionalLight position={[-3, 4, 5]} intensity={3} />

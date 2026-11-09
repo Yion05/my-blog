@@ -29,3 +29,5 @@
   .singularity-stage { perspective: none; }
   .singularity-active > .singularity-carrier { will-change: opacity; }
 }
+.singularity-echo { position: absolute; margin: 0 !important; pointer-events: none; z-index: -1; }
+.singularity-echo *, .singularity-echo *::before, .singularity-echo *::after { animation: none !important; transition: none !important; }
