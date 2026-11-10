@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import './profile-sections.css'
 import Credentials from './Credentials'
 import ProfileDepth from './ProfileDepth'
+import useTouchCardHighlight from '../hooks/useTouchCardHighlight'
 
 const fadeUp = {
     hidden: { opacity: 0, y: 24 },
@@ -37,6 +38,7 @@ const bioSegments = [
 ];
 
 export default function About({ onNext }) {
+    const touchCards = useTouchCardHighlight()
     const [selectedSkill, setSelectedSkill] = useState(null)
     const reducedMotion = useReducedMotion()
     // Reveal each section only when it enters the viewport, then stop observing it.
@@ -47,7 +49,7 @@ export default function About({ onNext }) {
         viewport: { once: true, amount: 0.12 },
     }
     return (
-        <div className="about-page max-w-5xl mx-auto">
+        <div ref={touchCards} className="about-page max-w-5xl mx-auto">
             {/* Section Title */}
             <motion.h2
                 {...reveal}
@@ -133,15 +135,21 @@ export default function About({ onNext }) {
                     {skillShowcases.map((skill, index) => (
                         <motion.div {...reveal} custom={index} key={skill.id} className="expertise-card-reveal">
                         <ProfileDepth variant="card">
-                        <button type="button" className="expertise-card" onClick={() => setSelectedSkill(skill)} aria-haspopup="dialog" aria-label={`View ${skill.title} work`} style={{ '--expertise-accent': skill.accent }}>
-                            <div className="expertise-card-top">
-                                <div className="expertise-icon"><i className={`fas ${skill.icon}`} aria-hidden="true" /></div>
+                        <button type="button" className={`expertise-card expertise-card--${skill.id}`} onClick={() => setSelectedSkill(skill)} aria-haspopup="dialog" aria-label={`View ${skill.title} work`} style={{ '--expertise-accent': skill.accent }}>
+                            <div className="expertise-showcase">
+                                {skill.id === 'modeling' && <><span className="expertise-orbit" aria-hidden="true" /><SkillModelPreview paused={Boolean(selectedSkill)} /></>}
+                                {skill.preview && <img className="expertise-game-preview" src={skill.preview} alt="Wildwood at sunset" loading="lazy" decoding="async" />}
+                                <div className="expertise-card-top">
+                                    <span className="expertise-category">{skill.category}</span>
+                                    <div className="expertise-icon"><i className={`fas ${skill.icon}`} aria-hidden="true" /></div>
+                                </div>
+                                <div className="expertise-preview-caption"><span>{skill.id === 'modeling' ? 'Eevee' : 'Wildwood'}</span><span>{skill.id === 'modeling' ? '360° preview' : 'In-game capture'}</span></div>
                             </div>
-                            <span className="expertise-category">{skill.category}</span>
-                            <span className="expertise-title font-orbitron font-bold">{skill.title}</span>
-                            {skill.id === 'modeling' && <SkillModelPreview paused={Boolean(selectedSkill)} />}
-                            {skill.preview && <img className="expertise-game-preview" src={skill.preview} alt="Wildwood at sunset" loading="lazy" decoding="async" />}
-                            <div className="expertise-card-bottom"><span>{skill.tag}</span><span className="expertise-cta">View work <span aria-hidden="true">↗</span></span></div>
+                            <div className="expertise-card-copy">
+                            <span className="expertise-title font-orbitron font-bold" data-title={skill.title}>{skill.title}</span>
+                            <span className="expertise-description">{skill.id === 'modeling' ? 'Character models, textures & studio renders.' : 'A world to explore. Built in Unity.'}</span>
+                            <div className="expertise-card-bottom"><span>{skill.tag}</span><span className="expertise-cta"><span className="expertise-cta-label">View work</span><span className="expertise-cta-arrow" aria-hidden="true"><span>↗</span></span></span></div>
+                            </div>
                         </button>
                         </ProfileDepth>
                         </motion.div>

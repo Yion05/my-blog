@@ -31,5 +31,4 @@
   pointer-events: none;
 }
 /* Keep the original scanline on the landing screen; arrival is stars only. */
-.cinema-traveling.scanline-overlay::after, .cinema-arrived.scanline-overlay::after { display: none; }
 .cinema-warp { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }

@@ -83,7 +83,7 @@ export default function App() {
     const ActivePageComponent = pages[activePage]
 
     return (
-        <div className={`min-h-screen scanline-overlay ${entryPhase === 'arrived' ? 'cinema-arrived' : entryPhase !== 'landing' ? 'cinema-traveling' : ''}`}>
+        <div className={`min-h-screen ${entryPhase === 'arrived' ? 'cinema-arrived' : entryPhase !== 'landing' ? 'cinema-traveling' : ''}`}>
             {/* Background Music */}
             <audio ref={audioRef} loop preload="auto">
                 <source src="song/yujian.mp3" type="audio/mpeg" />

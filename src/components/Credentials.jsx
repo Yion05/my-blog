@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { credentials } from '../data/credentials'
 import './profile-sections.css'
@@ -9,8 +10,40 @@ const categories = [
     { id: 'award', label: 'Awards', icon: 'fa-trophy' },
 ]
 
+function CredentialViewer({ entry, onClose }) {
+    const dialogRef = useRef(null)
+    useEffect(() => {
+        const dialog = dialogRef.current
+        const opener = document.activeElement
+        const overflow = document.body.style.overflow
+        dialog.showModal()
+        document.body.style.overflow = 'hidden'
+        return () => {
+            dialog.close()
+            document.body.style.overflow = overflow
+            if (opener?.isConnected) opener.focus({ preventScroll: true })
+        }
+    }, [])
+    return createPortal(
+        <dialog ref={dialogRef} className="skill-gallery credential-viewer" aria-labelledby="credential-viewer-title"
+            onCancel={event => { event.preventDefault(); onClose() }}
+            onClick={event => { if (event.target === event.currentTarget) onClose() }}>
+            <div>
+                <header className="skill-gallery-header">
+                    <div>
+                        <h2 id="credential-viewer-title" className="font-orbitron font-bold">{entry.title}</h2>
+                        <p className="gallery-description">{entry.issuer}{entry.date && ` · ${entry.date}`}</p>
+                    </div>
+                    <button type="button" className="gallery-close" aria-label="Close image" onClick={onClose} autoFocus>×</button>
+                </header>
+                <div className="credential-viewer-image"><img src={entry.image} alt={entry.title} /></div>
+            </div>
+        </dialog>, document.body)
+}
+
 export default function Credentials() {
     const [filter, setFilter] = useState('all')
+    const [selectedEntry, setSelectedEntry] = useState(null)
     const reducedMotion = useReducedMotion()
     const visibleCategories = categories.filter(category => filter === 'all' || filter === category.id)
     return (
@@ -34,13 +67,17 @@ export default function Credentials() {
                             <h4 className="font-orbitron font-bold text-lg">{category.label}</h4>
                         </div>
                         {entries.length ? entries.map(entry => <ProfileDepth variant="card" key={entry.id}><article className="credential-card">
-                            {entry.image && <a href={entry.image} target="_blank" rel="noopener noreferrer" aria-label={`Open ${entry.title} image in a new tab`}>
+                            {entry.image && <button type="button" className="credential-image-button" aria-haspopup="dialog"
+                                onClick={() => setSelectedEntry(entry)} aria-label={`View ${entry.title} image`}>
                                 <img src={entry.image} alt={entry.title} loading="lazy" decoding="async" className="credential-image" />
-                            </a>}
+                                <span className="credential-image-hint">View full size ⤢</span>
+                            </button>}
                             <div className="credential-card-copy">
-                                <p className="profile-eyebrow">{entry.issuer}{entry.date && ` · ${entry.date}`}</p>
-                                <h5 className="font-orbitron text-lg text-white">{entry.title}</h5>
-                                <p className="font-rajdhani text-gray-300 mt-3">{entry.description}</p>
+                                <p className="profile-eyebrow"><span className="credential-issuer">{entry.issuer}</span>{entry.date && <><span aria-hidden="true"> · </span><span className="credential-highlight--purple">{entry.date}</span></>}</p>
+                                <h5 className="credential-title font-orbitron text-lg">{entry.title}</h5>
+                                <p className="font-rajdhani text-gray-300 mt-3">{entry.descriptionSegments
+                                    ? entry.descriptionSegments.map((segment, index) => <span key={index} className={segment.tone ? `credential-highlight credential-highlight--${segment.tone}` : undefined}>{segment.text}</span>)
+                                    : entry.description}</p>
                                 {entry.verificationUrl && <a className="credential-verify" href={entry.verificationUrl} target="_blank" rel="noopener noreferrer">Verify credential ↗</a>}
                             </div>
                         </article></ProfileDepth>) : <ProfileDepth variant="card"><article className="credential-card credential-empty">
@@ -52,6 +89,7 @@ export default function Credentials() {
                     </motion.section>
                 })}
             </div>
+            {selectedEntry && <CredentialViewer entry={selectedEntry} onClose={() => setSelectedEntry(null)} />}
         </section>
     )
 }

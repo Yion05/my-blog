@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import useSingularityTransition from '../hooks/useSingularityTransition'
 
 export default function Hero({ onStart, onEntryComplete, cinemaRef, onPhase }) {
@@ -10,10 +10,6 @@ export default function Hero({ onStart, onEntryComplete, cinemaRef, onPhase }) {
         cinemaRef,
         onPhase,
     })
-    const particles = useMemo(() => Array.from({ length: 6 }, () => ({
-        width: 3 + Math.random() * 4,
-        height: 3 + Math.random() * 4,
-    })), [])
     const fullText = ' Welcome to my personal space'
     const [displayedText, setDisplayedText] = useState('')
 
@@ -36,33 +32,6 @@ export default function Hero({ onStart, onEntryComplete, cinemaRef, onPhase }) {
 
     return (
         <div ref={stageRef} aria-busy={isEntering} className="singularity-stage landing-readable h-screen flex flex-col items-center justify-center text-center px-4 relative z-10">
-            {/* Floating particles */}
-            {particles.map((particle, i) => (
-                <div key={i} data-singularity className="singularity-carrier singularity-particle"
-                    style={{ left: `${15 + i * 14}%`, top: `${20 + (i % 3) * 25}%` }}>
-                    <motion.div
-                        className="rounded-full pointer-events-none"
-                        style={{
-                            width: particle.width,
-                            height: particle.height,
-                            background: i % 2 === 0 ? '#00f0ff' : '#b000ff',
-                            opacity: 0.3,
-                        }}
-                        animate={{
-                            y: [0, -30, 0],
-                            opacity: [0.2, 0.6, 0.2],
-                            scale: [1, 1.5, 1],
-                        }}
-                        transition={{
-                            duration: 3 + i * 0.5,
-                            repeat: Infinity,
-                            delay: i * 0.4,
-                            ease: 'easeInOut',
-                        }}
-                    />
-                </div>
-            ))}
-
             {/* Glitch Title */}
             <div data-singularity className="singularity-carrier mb-6">
                 <motion.h1

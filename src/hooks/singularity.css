@@ -19,7 +19,6 @@
 .singularity-active > .singularity-carrier {
   will-change: transform, opacity;
 }
-.singularity-particle { position: absolute; }
 .singularity-hint {
   position: absolute;
   bottom: 2.5rem;
