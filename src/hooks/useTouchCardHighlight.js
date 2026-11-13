@@ -13,37 +13,50 @@ export default function useTouchCardHighlight() {
             press?.card.removeAttribute('data-touch-pressed')
             press = null
         }
-        const down = event => {
-            if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return
+        const begin = (target, id, type) => {
             clear()
-            const card = event.target.closest?.(cards)
+            const card = target.closest?.(cards)
             if (!card || !surface.contains(card)) return
-            press = { card, id: event.pointerId, x: event.clientX, y: event.clientY }
+            press = { card, id, type }
             card.setAttribute('data-touch-pressed', '')
         }
-        const move = event => {
-            if (press?.id === event.pointerId && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 12) clear()
+        // Browsers cancel pointer events when native scrolling begins. Touch
+        // events retain the finger's lifetime without blocking normal scrolling.
+        const touchStart = event => {
+            if (press?.type === 'touch') return
+            const touch = event.changedTouches[0]
+            if (touch) begin(touch.target, touch.identifier, 'touch')
         }
-        const end = event => { if (press?.id === event.pointerId) clear() }
+        const touchEnd = event => {
+            if (press?.type === 'touch' && Array.from(event.changedTouches).some(touch => touch.identifier === press.id)) clear()
+        }
+        const penDown = event => {
+            if (event.pointerType === 'pen') begin(event.target, event.pointerId, 'pen')
+        }
+        const penEnd = event => { if (press?.type === 'pen' && press.id === event.pointerId) clear() }
         const menu = event => {
             // Keep holding a skill tile from opening an image/text callout.
             // Profile text and certificate links retain their normal selection menus.
             if (press?.card.matches('.expertise-card, .skill-card') && press.card.contains(event.target)) event.preventDefault()
         }
-        surface.addEventListener('pointerdown', down, { passive: true })
+        surface.addEventListener('touchstart', touchStart, { passive: true })
+        surface.addEventListener('pointerdown', penDown, { passive: true })
         surface.addEventListener('contextmenu', menu)
-        window.addEventListener('pointermove', move, { passive: true })
-        window.addEventListener('pointerup', end)
-        window.addEventListener('pointercancel', end)
+        window.addEventListener('touchend', touchEnd, { passive: true })
+        window.addEventListener('touchcancel', touchEnd, { passive: true })
+        window.addEventListener('pointerup', penEnd)
+        window.addEventListener('pointercancel', penEnd)
         window.addEventListener('blur', clear)
         document.addEventListener('visibilitychange', clear)
         return () => {
             clear()
-            surface.removeEventListener('pointerdown', down)
+            surface.removeEventListener('touchstart', touchStart)
+            surface.removeEventListener('pointerdown', penDown)
             surface.removeEventListener('contextmenu', menu)
-            window.removeEventListener('pointermove', move)
-            window.removeEventListener('pointerup', end)
-            window.removeEventListener('pointercancel', end)
+            window.removeEventListener('touchend', touchEnd)
+            window.removeEventListener('touchcancel', touchEnd)
+            window.removeEventListener('pointerup', penEnd)
+            window.removeEventListener('pointercancel', penEnd)
             window.removeEventListener('blur', clear)
             document.removeEventListener('visibilitychange', clear)
         }

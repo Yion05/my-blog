@@ -1,0 +1,7 @@
+/* Only the button and rocket are painted: the page remains fully visible. */
+.rocket-launch-source { visibility: hidden !important; transition: none !important; }
+.rocket-transition { position: fixed; inset: 0; z-index: 100; pointer-events: none; overflow: hidden; }
+.rocket-button-shell { position: absolute; display: flex; align-items: center; justify-content: center; border: 1px solid #00f0ff; background: #002126; color: #00f0ff; font: 600 .95rem Orbitron, sans-serif; letter-spacing: 2px; text-transform: uppercase; white-space: nowrap; transform-origin: center; }
+.rocket-sprite { position: absolute; width: 320px; height: 320px; opacity: 0; transform-origin: center; }
+.rocket-canvas, .rocket-fallback { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+@media (max-width: 600px) { .rocket-sprite { width: 280px; height: 280px; } }

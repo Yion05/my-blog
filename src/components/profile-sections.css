@@ -43,7 +43,7 @@
     .about-page .skill-card, .about-page .skill-card img { transition: none; }
 }
 .profile-depth-copy { min-width: 0; }
-/* Pointer-held state also works on hybrid devices; scrolling cancels it. */
+/* Held state stays active during touch scrolling, until the finger lifts. */
 .about-page .profile-depth-card[data-touch-pressed] { border-color: #00f0ff; }
 .about-page .expertise-card[data-touch-pressed] { border-color: var(--expertise-accent); transform: none; }
 .about-page .credential-card[data-touch-pressed] { border-color: var(--accent); }

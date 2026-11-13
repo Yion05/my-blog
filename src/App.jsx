@@ -8,6 +8,7 @@ import Journey from './components/Journey'
 import Hobbies from './components/Hobbies'
 import Portfolio from './components/Portfolio'
 import Footer from './components/Footer'
+import RocketTransition from './components/RocketTransition'
 
 const pageVariants = {
     initial: { opacity: 0, y: 40 },
@@ -33,6 +34,9 @@ export default function App() {
     const cinemaRef = useRef(null)
     const [entryPhase, setEntryPhase] = useState('landing')
     const [sceneVersion, setSceneVersion] = useState(0)
+    const [rocketDestination, setRocketDestination] = useState(null)
+    const rocketBusy = useRef(false)
+    const rocketSource = useRef(null)
 
     const handleStart = () => {
         if (audioRef.current) {
@@ -54,11 +58,13 @@ export default function App() {
     }
 
     const handleNavigate = (pageId) => {
+        if (rocketBusy.current) return
         setActivePage(pageId)
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
     const handleLogoClick = () => {
+        if (rocketBusy.current) return
         setTransitioning(true)
         setTimeout(() => {
             setActivePage('about')
@@ -75,9 +81,13 @@ export default function App() {
         hobbies: 'portfolio',
     }
 
-    const handleNext = () => {
+    const handleNext = (event) => {
         const next = nextPageMap[activePage]
-        if (next) handleNavigate(next)
+        if (!next || rocketBusy.current) return
+        const element = event.currentTarget
+        rocketSource.current = { element, rect: element.getBoundingClientRect(), label: element.textContent }
+        rocketBusy.current = true
+        setRocketDestination(next)
     }
 
     const ActivePageComponent = pages[activePage]
@@ -128,6 +138,19 @@ export default function App() {
                     </div>
                 )}
             </div>
+            {rocketDestination && <RocketTransition destination={rocketDestination} source={rocketSource.current}
+                onArrive={() => {
+                    setActivePage(rocketDestination)
+                    window.scrollTo({ top: 0, behavior: 'instant' })
+                }}
+                onComplete={() => {
+                    setRocketDestination(null)
+                    rocketBusy.current = false
+                    requestAnimationFrame(() => {
+                        const heading = document.querySelector('main h2')
+                        if (heading) { heading.setAttribute('tabindex', '-1'); heading.focus({ preventScroll: true }) }
+                    })
+                }} />}
         </div>
     )
 }
