@@ -48,17 +48,37 @@
 .about-page .expertise-card[data-touch-pressed] { border-color: var(--expertise-accent); transform: none; }
 .about-page .credential-card[data-touch-pressed] { border-color: var(--accent); }
 .about-page .skill-card[data-touch-pressed] { border-color: var(--skill-border); box-shadow: var(--skill-active-shadow); transform: none; }
-.about-page .skills-carousel:has([data-touch-pressed]) .skills-track { animation-play-state: paused; }
+.about-page .skills-track:has(.skill-card[data-logo-pressed]) { animation-play-state: paused; }
 @media (max-width: 767px), (prefers-reduced-motion: reduce) {
     .profile-depth-photo, .profile-depth-copy { transform: none; }
     .profile-depth-card { transform-style: flat; }
 }
-/* Lightweight cards: no animated blur or continuous effects. */
+/* A slow outward color wave, matching the home button without moving the content. */
+.expertise-card-reveal > .card-depth-stage::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 10px;
+    z-index: 2;
+    border-radius: 20px;
+    pointer-events: none;
+    opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .expertise-card-reveal > .card-depth-stage::after {
+        opacity: 1;
+        animation: expertise-button-pulse 2.8s ease-out infinite;
+    }
+}
+@keyframes expertise-button-pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--expertise-accent) 38%, transparent); }
+    75% { box-shadow: 0 0 0 12px color-mix(in srgb, var(--expertise-accent) 0%, transparent); }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
 .expertise-section { margin: 48px 0; }
 .expertise-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .expertise-card-reveal { min-width: 0; }
-.expertise-card { position: relative; overflow: hidden; height: 100%; padding: 0; border: 2px solid #ffffff20; border-radius: 20px; background: linear-gradient(135deg, #111524f5, #080a15f5); }
-.expertise-showcase { position: relative; height: 260px; overflow: hidden; background: radial-gradient(ellipse at 50% 65%, #ad692c30, transparent 65%), #10121d; border-bottom: 1px solid #ffffff12; }
+.expertise-card { display: flex; flex-direction: column; align-items: stretch; position: relative; overflow: hidden; height: 100%; padding: 0; border: 2px solid #ffffff20; border-radius: 20px; background: linear-gradient(135deg, #111524f5, #080a15f5); }
+.expertise-showcase { position: relative; flex-shrink: 0; height: 260px; overflow: hidden; background: radial-gradient(ellipse at 50% 65%, #ad692c30, transparent 65%), #10121d; border-bottom: 1px solid #ffffff12; }
 .expertise-card--modeling .expertise-showcase::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(#fbad6707 1px, transparent 1px), linear-gradient(90deg, #fbad6707 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(transparent, #000); }
 .expertise-card--games .expertise-showcase::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#090b1790, transparent 40%, #090b17e8); pointer-events: none; }
 .expertise-card-top { position: absolute; inset: 20px 22px auto; z-index: 2; display: flex; align-items: center; justify-content: space-between; }
@@ -70,14 +90,14 @@
 .expertise-preview-caption { position: absolute; z-index: 2; bottom: 16px; left: 22px; right: 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 600 .75rem Rajdhani, sans-serif; color: #cbd0df; }
 .expertise-preview-caption > span:first-child { color: #f0e9df; letter-spacing: .14em; text-transform: uppercase; }
 .expertise-preview-caption > span:last-child::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-right: 7px; border-radius: 50%; background: var(--expertise-accent); }
-.expertise-card-copy { padding: 25px 26px 26px; }
-.expertise-description { display: block; margin-top: 8px; font: 400 1rem/1.5 Rajdhani, sans-serif; color: #a9b1c5; }
-.expertise-title { font-size: clamp(1rem, 2vw, 1.25rem); color: #b8efff; line-height: 1.5; }
+.expertise-card-copy { display: flex; flex-direction: column; flex: 1; padding: 25px 26px 26px; }
+.expertise-description { display: block; min-height: 3rem; margin: 8px 0 24px; font: 400 1rem/1.5 Rajdhani, sans-serif; color: #a9b1c5; }
+.expertise-title { min-height: 2rem; font-size: clamp(1rem, 2vw, 1.25rem); color: #b8efff; line-height: 2rem; }
 /* Keep the modeling title flat and readable. */
 .expertise-card--modeling .expertise-title {
     text-shadow: none;
 }
-.expertise-card--games .expertise-title { position: relative; width: fit-content; max-width: 100%; font-family: 'Press Start 2P', monospace; font-weight: 400; font-size: clamp(.78rem, 1.25vw, .94rem); line-height: 2; text-shadow: 1px 1px 0 #67519b, 0 2px 0 #292544; }
+.expertise-card--games .expertise-title { position: relative; width: fit-content; max-width: 100%; font-family: 'Press Start 2P', monospace; font-weight: 400; font-size: clamp(.78rem, 1.25vw, .94rem); line-height: 2rem; text-shadow: 1px 1px 0 #67519b, 0 2px 0 #292544; }
 .expertise-card--games .expertise-title::after {
     content: attr(data-title); position: absolute; inset: 0; color: #c4afff;
     text-shadow: -2px 0 #a78bfa, 2px 0 #53e4f5; clip-path: inset(42% 0 40%); opacity: 0; pointer-events: none;
@@ -90,7 +110,7 @@
     86%, 90% { opacity: .85; transform: translateX(2px); clip-path: inset(42% 0 40%); }
     88%, 92% { opacity: .65; transform: translateX(-2px); clip-path: inset(65% 0 18%); }
 }
-.expertise-card-bottom { display: flex; align-items: center; gap: 20px; margin-top: 24px; }
+.expertise-card-bottom { display: flex; align-items: center; gap: 20px; margin-top: auto; }
 .expertise-card-bottom > span:first-child { font: 500 .9rem Rajdhani, sans-serif; color: #9ee8c9; white-space: nowrap; border: 1px solid #9ee8c922; background: #9ee8c908; padding: 5px 10px; border-radius: 6px; }
 .expertise-line { height: 1px; flex: 1; background: linear-gradient(90deg, var(--expertise-accent), transparent); opacity: .4; }
 .credential-filters { display: flex; gap: 8px; margin: 28px 0 36px; flex-wrap: wrap; }
@@ -140,13 +160,52 @@
     .expertise-card:hover { border-color: var(--expertise-accent); transform: translateY(-4px); background: linear-gradient(135deg, #1a2033, #0b0e1b); }
     .expertise-card:hover .expertise-icon { transform: translateY(-3px) rotate(-6deg); }
 }
-.expertise-card:active { transform: translateY(-1px); }
+.about-page .expertise-card:active {
+    transform: translateY(2px);
+    border-color: var(--expertise-accent);
+    box-shadow: inset 0 2px 8px #0006, 0 2px 0 #151e2e, 0 8px 18px #0006;
+}
+.about-page .expertise-card[data-touch-pressed] {
+    transform: none;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--expertise-accent) 25%, transparent), var(--card-edge);
+}
 .expertise-card:focus-visible { outline: 2px solid var(--expertise-accent); outline-offset: 4px; }
 .expertise-category, .expertise-title { display: block; }
-.expertise-card-bottom { justify-content: space-between; border-top: 1px solid #ffffff10; padding-top: 18px; }
-.expertise-cta { --work-highlight: 1; display: inline-flex; align-items: center; gap: 12px; font: 600 .95rem Rajdhani, sans-serif; color: var(--expertise-accent); }
+.expertise-card-bottom { justify-content: space-between; flex-wrap: wrap; border-top: 1px solid #ffffff10; padding-top: 18px; }
+/* The entire card is already a button; this raised face shares its click action. */
+.expertise-cta {
+    --work-highlight: 1;
+    --work-edge: color-mix(in srgb, var(--expertise-accent) 42%, #111321);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    gap: 10px;
+    min-height: 44px;
+    padding: 7px 12px;
+    margin-bottom: 5px;
+    border: 1px solid color-mix(in srgb, var(--expertise-accent) 75%, transparent);
+    border-radius: 10px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--expertise-accent) 20%, #171c2b), #111523);
+    box-shadow: inset 0 1px 0 #ffffff26, 0 4px 0 var(--work-edge), 0 5px 0 #060810, 0 8px 12px #0006;
+    font: 600 .95rem Rajdhani, sans-serif;
+    color: var(--expertise-accent);
+    white-space: nowrap;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
 .expertise-cta-label { position: relative; }
-.expertise-cta-label::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor; transform: scaleX(var(--work-highlight, 0)); transform-origin: left center; transition: transform .28s ease; }
+@media (hover: hover) and (pointer: fine) {
+    .expertise-cta:hover {
+        border-color: var(--expertise-accent);
+        box-shadow: inset 0 1px 0 #ffffff38, 0 4px 0 var(--work-edge), 0 5px 0 #060810, 0 0 16px color-mix(in srgb, var(--expertise-accent) 20%, transparent);
+    }
+}
+.expertise-card:focus-visible .expertise-cta { border-color: var(--expertise-accent); }
+.expertise-card:active .expertise-cta,
+.expertise-card[data-touch-pressed] .expertise-cta {
+    transform: translateY(3px);
+    box-shadow: inset 0 2px 4px #0004, 0 1px 0 var(--work-edge), 0 3px 6px #0005;
+}
 .expertise-cta-arrow { position: relative; border: 1px solid #ffffff25; border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; font-size: 18px; }
 .expertise-cta-arrow::before { content: ''; position: absolute; inset: -1px; border: 1px solid currentColor; border-radius: inherit; background: color-mix(in srgb, currentColor 10%, transparent); box-shadow: 0 0 12px color-mix(in srgb, currentColor 20%, transparent); opacity: var(--work-highlight, 0); transition: opacity .25s ease; }
 .expertise-cta-arrow > span { display: block; line-height: 1; }
@@ -179,7 +238,7 @@
 .gallery-picker button[aria-pressed=true] { color: var(--expertise-accent); border-color: var(--expertise-accent); }
 @media (max-width: 640px) { .skill-gallery-header, .skill-gallery-footer { padding: 20px; } .skill-gallery-footer { flex-wrap: wrap; } .skill-gallery-empty { padding: 36px 20px; } }
 @media (prefers-reduced-motion: reduce) {
-    .expertise-card, .expertise-icon, .expertise-cta-label::after, .expertise-cta-arrow::before { transition: none; }
+    .expertise-card, .expertise-icon, .expertise-cta, .expertise-cta-arrow::before { transition: none; }
     .expertise-card:hover, .expertise-card:hover .expertise-icon { transform: none; }
     .about-page .skills-track, .about-page .gradient-text { animation: none; }
 }

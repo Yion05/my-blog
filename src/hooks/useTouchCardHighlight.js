@@ -11,6 +11,7 @@ export default function useTouchCardHighlight() {
         let press = null
         const clear = () => {
             press?.card.removeAttribute('data-touch-pressed')
+            press?.card.removeAttribute('data-logo-pressed')
             press = null
         }
         const begin = (target, id, type) => {
@@ -19,6 +20,9 @@ export default function useTouchCardHighlight() {
             if (!card || !surface.contains(card)) return
             press = { card, id, type }
             card.setAttribute('data-touch-pressed', '')
+            if (card.matches('.skill-card') && target.matches?.('img')) {
+                card.setAttribute('data-logo-pressed', '')
+            }
         }
         // Browsers cancel pointer events when native scrolling begins. Touch
         // events retain the finger's lifetime without blocking normal scrolling.

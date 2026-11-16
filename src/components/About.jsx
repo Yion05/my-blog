@@ -133,7 +133,7 @@ export default function About({ onNext }) {
                 <motion.h3 {...reveal} id="expertise-title" className="font-orbitron text-2xl md:text-3xl font-bold gradient-text mb-6">Technical & Creative Skills</motion.h3>
                 <div className="expertise-grid">
                     {skillShowcases.map((skill, index) => (
-                        <motion.div {...reveal} custom={index} key={skill.id} className="expertise-card-reveal">
+                        <motion.div {...reveal} custom={index} key={skill.id} className="expertise-card-reveal" style={{ '--expertise-accent': skill.accent }}>
                         <ProfileDepth variant="card">
                         <button type="button" className={`expertise-card expertise-card--${skill.id}`} onClick={() => setSelectedSkill(skill)} aria-haspopup="dialog" aria-label={`View ${skill.title} work`} style={{ '--expertise-accent': skill.accent }}>
                             <div className="expertise-showcase">
@@ -147,7 +147,13 @@ export default function About({ onNext }) {
                             </div>
                             <div className="expertise-card-copy">
                             <span className="expertise-title font-orbitron font-bold" data-title={skill.title}>{skill.title}</span>
-                            <span className="expertise-description">{skill.id === 'modeling' ? 'Character models, textures & studio renders.' : 'A world to explore. Built in Unity.'}</span>
+                            <span className="expertise-description">
+                                {skill.id === 'modeling' ? <>
+                                    I created this <span className="text-cyber-cyan font-semibold">3D model</span> using <span className="text-[#fbad67] font-semibold">Blender</span>. Click <span className="text-neon-yellow font-semibold">“View work”</span> to explore my <span className="text-[#c297ff] font-semibold">character models</span>, <span className="text-[#9ee8c9] font-semibold">textures</span>, and <span className="text-cyber-cyan font-semibold">studio renders</span>.
+                                </> : <>
+                                    I created <span className="text-neon-yellow font-semibold">Wildwood</span> using <span className="text-[#9ee8c9] font-semibold">Unity 3D</span>. Click <span className="text-[#c297ff] font-semibold">“View work”</span> to explore <span className="text-cyber-cyan font-semibold">gameplay screenshots</span>, my <span className="text-[#c297ff] font-semibold">Unity workspace</span>, and a <span className="text-[#fbad67] font-semibold">gameplay video</span>.
+                                </>}
+                            </span>
                             <div className="expertise-card-bottom"><span>{skill.tag}</span><span className="expertise-cta"><span className="expertise-cta-label">View work</span><span className="expertise-cta-arrow" aria-hidden="true"><span>↗</span></span></span></div>
                             </div>
                         </button>

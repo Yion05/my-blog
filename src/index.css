@@ -356,7 +356,7 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 60px;
+  width: 100%;
   height: 2px;
   background: linear-gradient(90deg, #00f0ff, #b000ff);
   box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
@@ -377,23 +377,29 @@ body {
 
 /* The sliding track — items are duplicated for seamless loop */
 .skills-track {
+  --skills-gap: 2rem;
   display: flex;
-  gap: 2rem;
+  gap: var(--skills-gap);
+  /* Include the final gap so each duplicated set has exactly the same width. */
+  padding-right: var(--skills-gap);
   width: max-content;
   animation: slide-left 18s linear infinite;
+  will-change: transform;
 }
 
-.skills-carousel:hover .skills-track {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  .skills-track:has(.skill-card img:hover) {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes slide-left {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -467,7 +473,7 @@ body {
   }
 
   .skills-track {
-    gap: 1.25rem;
+    --skills-gap: 1.25rem;
   }
 }
 /* Space background only; original content styles above are unchanged. */
